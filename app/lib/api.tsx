@@ -1,4 +1,5 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const TEST_URL = process.env.NEXT_PUBLIC_TEST_URL;
 const USER_URL = process.env.NEXT_PUBLIC_USER_URL;
 
 async function fetchAPI(url: string|undefined, method: string = 'POST', headers: any = { 'Content-Type': 'application/json' }, body: any = {}) {
@@ -18,6 +19,15 @@ async function fetchAPI(url: string|undefined, method: string = 'POST', headers:
         } else {
             throw new Error('API URL is not set')
         }
+    } catch (error: any) {
+        console.log(error.message)
+        throw new Error(`${error.message}.`)
+    }
+}
+
+async function checkBackend() {
+    try {
+        return await fetchAPI(`${BASE_URL}${TEST_URL}`, 'GET', undefined, null)
     } catch (error: any) {
         console.log(error.message)
         throw new Error(`${error.message}.`)

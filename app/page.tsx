@@ -1,5 +1,4 @@
-import UserTable from "@/components/user-table";
-import Image from "next/image";
+import UserTable from "./components/user-table";
 
 export default function Home() {
   return (
