@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'
 import { checkBackend, fetchUserList } from '@/app/lib/api';
 import { User } from '../types/user';
 import { jsonToUser } from '../lib/utils';
@@ -31,6 +32,13 @@ const UserTable: React.FC = () => {
         (user.firstName.toLowerCase() + " " + user.lastName.toLowerCase()).includes(searchQuery.toLowerCase())
     );
 
+    const router = useRouter();
+
+    const handleWatchSessions = (userId: string) => {
+    // Navigate to the user page with the user ID
+    router.push(`/user/${userId}`);
+    };
+
     return (
         <div className="overflow-x-auto">
             <div className="form-control">
@@ -58,7 +66,7 @@ const UserTable: React.FC = () => {
                         <th>{index + 1}</th>
                         <td>{user.firstName} {user.lastName}</td>
                         <td>{user.email}</td>
-                        <td>{user.id}</td>
+                        <td><button className="btn btn-primary" onClick={e => handleWatchSessions(user.id.toString())}>Watch Sessions</button></td>
                     </tr>
                 ))}
                 </tbody>
