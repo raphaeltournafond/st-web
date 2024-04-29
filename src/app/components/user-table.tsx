@@ -7,6 +7,7 @@ import { jsonToUser } from '../lib/utils';
 
 const UserTable: React.FC = () => {
     const [userData, setUserData] = useState<User[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,9 +25,24 @@ const UserTable: React.FC = () => {
         fetchData(); // Call the function when the component mounts
     }, []); // Empty dependency array to only run once on mount
 
+    const filteredUserData = userData.filter(user =>
+        user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.lastName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user.firstName.toLowerCase() + " " + user.lastName.toLowerCase()).includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="overflow-x-auto">
-            <table className="table table-zebra">
+            <div className="form-control">
+                <input 
+                    type="text" 
+                    placeholder="Athlete search"
+                    className="input input-bordered w-24 md:w-auto"
+                    value={searchQuery}
+                    onChange={e => setSearchQuery(e.target.value)}
+                />
+            </div>
+            <table className="table">
                 {/* head */}
                 <thead>
                 <tr>
@@ -37,8 +53,8 @@ const UserTable: React.FC = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {userData.map((user, index) => (
-                    <tr key={index}>
+                {filteredUserData.map((user, index) => (
+                    <tr key={index} className="hover">
                         <th>{index + 1}</th>
                         <td>{user.firstName} {user.lastName}</td>
                         <td>{user.email}</td>
