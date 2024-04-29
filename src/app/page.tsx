@@ -30,7 +30,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <UserTable title="Users"></UserTable>
+      <UserTable />
     </main>
   );
 }
