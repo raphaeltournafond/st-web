@@ -13,7 +13,6 @@ const UserTable: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Call the checkBackend function
                 await checkBackend();
                 const jsonData = await fetchUserList()
                 const userList: User[] = jsonData.map(jsonToUser);
@@ -23,8 +22,8 @@ const UserTable: React.FC = () => {
             }
         };
 
-        fetchData(); // Call the function when the component mounts
-    }, []); // Empty dependency array to only run once on mount
+        fetchData();
+    }, []);
 
     const filteredUserData = userData.filter(user =>
         user.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||

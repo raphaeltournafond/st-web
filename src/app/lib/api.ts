@@ -43,4 +43,13 @@ async function fetchUserList() {
     }
 }
 
-export {checkBackend, fetchUserList}
+async function fetchUserDetails(id: string) {
+    try {
+        return await fetchAPI(`${BASE_URL}${USER_URL}${id}/`, 'GET', undefined, null)
+    } catch (error: any) {
+        console.log(error.message)
+        throw new Error(`${error.message}.`)
+    }
+}
+
+export {checkBackend, fetchUserList, fetchUserDetails}
