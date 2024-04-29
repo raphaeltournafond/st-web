@@ -33,3 +33,5 @@ async function checkBackend() {
         throw new Error(`${error.message}.`)
     }
 }
+
+export {checkBackend}
