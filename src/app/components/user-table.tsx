@@ -1,21 +1,22 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import { checkBackend } from '@/app/lib/api';
+import { checkBackend, fetchUserList } from '@/app/lib/api';
+import { User } from '../types/user';
+import { jsonToUser } from '../lib/utils';
 
-interface UserTableProps {
-    title: string;
-}
-
-const UserTable: React.FC<UserTableProps> = ({ title }) => {
-    const [userData, setUserData] = useState<any[]>([]);
+const UserTable: React.FC = () => {
+    const [userData, setUserData] = useState<User[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // Call the checkBackend function
-                const data = await checkBackend();
-                setUserData(data); // Update state with fetched data
+                await checkBackend();
+                const jsonData = await fetchUserList()
+                const userList: User[] = jsonData.map(jsonToUser);
+                console.log(userList);
+                setUserData(userList); // Update state with fetched data
             } catch (error: any) {
                 console.error('Error fetching data:', error.message);
             }
@@ -26,7 +27,6 @@ const UserTable: React.FC<UserTableProps> = ({ title }) => {
 
     return (
         <div className="overflow-x-auto">
-            <h1>{title}</h1>
             <table className="table table-zebra">
                 {/* head */}
                 <thead>
