@@ -1,6 +1,7 @@
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const TEST_URL = process.env.NEXT_PUBLIC_TEST_URL;
 const USER_URL = process.env.NEXT_PUBLIC_USER_URL;
+const SESSION_URL = process.env.NEXT_PUBLIC_SESSION_URL;
 
 async function fetchAPI(url: string|undefined, method: string = 'POST', headers: any = { 'Content-Type': 'application/json' }, body: any = {}) {
     try {
@@ -52,4 +53,13 @@ async function fetchUserDetails(id: string) {
     }
 }
 
-export {checkBackend, fetchUserList, fetchUserDetails}
+async function fetchSessions(id: string) {
+    try {
+        return await fetchAPI(`${BASE_URL}${SESSION_URL}`, 'GET', undefined, null)
+    } catch (error: any) {
+        console.log(error.message)
+        throw new Error(`${error.message}.`)
+    }
+}
+
+export {checkBackend, fetchUserList, fetchUserDetails, fetchSessions}
