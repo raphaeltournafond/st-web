@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { checkBackend, fetchUserDetails } from "@/app/lib/api";
-import { jsonToUser } from "@/app/lib/utils";
-import { User } from "@/app/types/user";
+import { checkBackend, fetchUserDetails } from '@/app/lib/api';
+import { jsonToUser } from '@/app/lib/utils';
+import { User } from '@/app/types/user';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [userData, setUserData] = useState<User>();
@@ -24,5 +24,18 @@ export default function Page({ params }: { params: { id: string } }) {
         fetchData();
     }, [params.id]);
 
-    return <h1>My Page {userData?.id}</h1>
+    return (
+        <main className='bg-base-100'>
+            <div className='container mx-auto py-8'>
+                <div className='p-6'>
+                    <div className='flex justify-between items-center'>
+                        <div>
+                            <p className='text-lg font-semibold'>Welcome {userData?.firstName}!</p>
+                            <p className='text-md'>Check out your last sessions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    );
 }
