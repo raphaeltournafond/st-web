@@ -55,7 +55,7 @@ async function fetchUserDetails(id: string) {
 
 async function fetchSessions(id: string) {
     try {
-        return await fetchAPI(`${BASE_URL}${SESSION_URL}`, 'GET', undefined, null)
+        return await fetchAPI(`${BASE_URL}${SESSION_URL}${id}/`, 'GET', undefined, null)
     } catch (error: any) {
         console.log(error.message)
         throw new Error(`${error.message}.`)
