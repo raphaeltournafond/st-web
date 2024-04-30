@@ -3,14 +3,13 @@ import * as d3 from 'd3';
 import { Session } from "../types/session";
 
 interface ChartProps {
-    session: Session|undefined
+    session: Session|undefined,
+    width: number,
+    height: number,
 }
 
-const SessionViewer: React.FC<ChartProps> = ({ session }) => {
+const SessionViewer: React.FC<ChartProps> = ({ session, width = 600, height = 400 }) => {
     const svgRef = useRef<SVGSVGElement>(null);
-
-    const width = 600;
-    const height = 400;
 
     useEffect(() => {
         if (!session) {
@@ -70,10 +69,10 @@ const SessionViewer: React.FC<ChartProps> = ({ session }) => {
             .attr('fill', color('0'))
             .text('X');
 
-        // Y
+        // Z
 
         g.append('path')
-            .datum(session.data.map(d => d.y))
+            .datum(session.data.map(d => d.z))
             .attr('fill', 'none')
             .attr('stroke', color('1'))
             .attr('stroke-width', 1.5)
@@ -81,14 +80,14 @@ const SessionViewer: React.FC<ChartProps> = ({ session }) => {
 
         g.append('text')
             .attr('x', innerWidth)
-            .attr('y', yScale(session.data[session.data.length - 1].y))
+            .attr('y', yScale(session.data[session.data.length - 1].z))
             .attr('fill', color('1'))
-            .text('Y');
+            .text('Z');
 
-        // Z
+        // Y
 
         g.append('path')
-            .datum(session.data.map(d => d.z))
+            .datum(session.data.map(d => d.y))
             .attr('fill', 'none')
             .attr('stroke', color('2'))
             .attr('stroke-width', 1.5)
@@ -96,10 +95,11 @@ const SessionViewer: React.FC<ChartProps> = ({ session }) => {
 
         g.append('text')
             .attr('x', innerWidth)
-            .attr('y', yScale(session.data[session.data.length - 1].z))
+            .attr('y', yScale(session.data[session.data.length - 1].y))
             .attr('fill', color('2'))
-            .text('Z');
-    }, [session]);
+            .text('Y');
+
+    }, [session, width, height]);
 
     return (
         <svg ref={svgRef} width={width} height={height}></svg>

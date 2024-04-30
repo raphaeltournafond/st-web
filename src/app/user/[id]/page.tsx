@@ -39,7 +39,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             <p className='text-lg font-semibold'>Welcome {userData?.firstName}!</p>
                             <p className='text-md'>Check out your last sessions.</p>
                         </div>
-                        <SessionViewer session={sessionData[sessionData.length-1]}/>
+                        <SessionViewer session={sessionData[sessionData.length-1]} width={400} height={200}/>
                     </div>
                 </div>
             </div>
