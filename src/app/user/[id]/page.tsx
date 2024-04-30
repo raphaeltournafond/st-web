@@ -16,11 +16,11 @@ export default function Page({ params }: { params: { id: string } }) {
             try {
                 await checkBackend();
                 let jsonData = await fetchUserDetails(params.id)
-                const userData: User = jsonToUser(jsonData);
-                setUserData(userData);
+                const userJsonData: User = jsonToUser(jsonData);
+                setUserData(userJsonData);
                 jsonData = await fetchSessionList(params.id)
-                const sessionData: Session[] = jsonData.map(jsonToSession)
-                setSessionData(sessionData);
+                const sessionJsonData: Session[] = jsonData.map(jsonToSession)
+                setSessionData(sessionJsonData);
             } catch (error: any) {
                 console.error('Error fetching data:', error.message);
             }

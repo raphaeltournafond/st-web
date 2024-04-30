@@ -1,9 +1,10 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { checkBackend, fetchUserDetails } from '@/app/lib/api';
+import { checkBackend, fetchSession } from '@/app/lib/api';
 import { Session } from '@/app/types/session';
 import SessionViewer from '@/app/components/session-viewer';
+import { jsonToSession } from '@/app/lib/utils';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [sessionData, setSessionData] = useState<Session>();
@@ -12,6 +13,8 @@ export default function Page({ params }: { params: { id: string } }) {
         const fetchData = async () => {
             try {
                 await checkBackend();
+                const sessionJsonData = await fetchSession(params.id)
+                setSessionData(jsonToSession(sessionJsonData))
             } catch (error: any) {
                 console.error('Error fetching data:', error.message);
             }
