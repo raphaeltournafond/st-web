@@ -6,10 +6,18 @@ import { formatDate, formatDuration, jsonToSession, jsonToUser } from '@/app/lib
 import { User } from '@/app/types/user';
 import { Session } from '@/app/types/session';
 import SessionViewer from '@/app/components/session-viewer';
+import { useRouter } from 'next/navigation';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [userData, setUserData] = useState<User>();
     const [sessionData, setSessionData] = useState<Session[]>([]);
+
+    const router = useRouter();
+
+    const handleWatchSession = (sessionId: string) => {
+        // Navigate to the session page with the session ID
+        router.push(`/user/session/${sessionId}`);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,7 +57,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                 <h2 className="card-title">{formatDate(Number(session.startDate))}</h2>
                                 <p>Duration: {formatDuration(Number(session.endDate) - Number(session.startDate))}</p>
                                 <div className="card-actions justify-end">
-                                    <button className="btn btn-primary">Analyse</button>
+                                    <button className="btn btn-primary" onClick={e => handleWatchSession(session.id.toString())}>Analyse</button>
                                 </div>
                                 </div>
                             </div>
