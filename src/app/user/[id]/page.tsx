@@ -32,7 +32,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
     return (
         <main className='bg-base-100'>
-            <div className='container mx-auto py-8'>
+            <div className='container mx-auto p-8'>
                 <div className='p-6'>
                     <div className='flex justify-between items-center'>
                         <div>
@@ -40,14 +40,14 @@ export default function Page({ params }: { params: { id: string } }) {
                             <p className='text-md'>Check out your last sessions.</p>
                         </div>
                     </div>
-                    <div className='p-6'>
-                        {sessionData.map(session => (
-                            <div key={session.id} className="card w-96 bg-base-100 shadow-xl m-6">
+                    <div className='p-6 flex flex-wrap justify-center'>
+                        {sessionData.slice().reverse().map(session => (
+                            <div key={session.id} className="card bg-base-100 shadow-xl m-6">
                                 <figure>
-                                    <SessionViewer session={session} width={400} height={200} />
+                                    <SessionViewer session={session} width={300} height={200} />
                                 </figure>
                                 <div className="card-body">
-                                <h2 className="card-title">{session.startDate}</h2>
+                                <h2 className="card-title">{new Date(Number(session.startDate) * 1000).toLocaleString()}</h2>
                                 <p>⏱️ {Math.floor(Number(session.endDate) - Number(session.startDate))}</p>
                                 <div className="card-actions justify-end">
                                     <button className="btn btn-primary">Analyse</button>
