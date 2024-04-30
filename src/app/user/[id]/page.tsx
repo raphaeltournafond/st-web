@@ -31,7 +31,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }, [params.id]);
 
     return (
-        <main className='bg-base-100'>
+        <main className='bg-base-200'>
             <div className='container mx-auto p-8'>
                 <div className='p-6'>
                     <div className='flex justify-between items-center'>
