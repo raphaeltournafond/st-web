@@ -5,6 +5,7 @@ import { checkBackend, fetchUserDetails, fetchSessions } from '@/app/lib/api';
 import { jsonToSession, jsonToUser } from '@/app/lib/utils';
 import { User } from '@/app/types/user';
 import { Session } from '@/app/types/session';
+import SessionViewer from '@/app/components/session-viewer';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [userData, setUserData] = useState<User>();
@@ -38,6 +39,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             <p className='text-lg font-semibold'>Welcome {userData?.firstName}!</p>
                             <p className='text-md'>Check out your last sessions.</p>
                         </div>
+                        <SessionViewer session={sessionData[sessionData.length-1]}/>
                     </div>
                 </div>
             </div>
