@@ -39,7 +39,22 @@ export default function Page({ params }: { params: { id: string } }) {
                             <p className='text-lg font-semibold'>Welcome {userData?.firstName}!</p>
                             <p className='text-md'>Check out your last sessions.</p>
                         </div>
-                        <SessionViewer session={sessionData[sessionData.length-1]} width={400} height={200}/>
+                    </div>
+                    <div className='p-6'>
+                        {sessionData.map(session => (
+                            <div key={session.id} className="card w-96 bg-base-100 shadow-xl m-6">
+                                <figure>
+                                    <SessionViewer session={session} width={400} height={200} />
+                                </figure>
+                                <div className="card-body">
+                                <h2 className="card-title">{session.startDate}</h2>
+                                <p>⏱️ {Math.floor(Number(session.endDate) - Number(session.startDate))}</p>
+                                <div className="card-actions justify-end">
+                                    <button className="btn btn-primary">Analyse</button>
+                                </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
