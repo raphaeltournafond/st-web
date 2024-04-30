@@ -47,4 +47,16 @@ function formatDuration(durationInSeconds: number) {
     return formattedDuration.trim();
 }
 
-export { jsonToUser, jsonToSession, formatDuration }
+function formatDate(sessionDate: number) {
+    const startDate = new Date(sessionDate * 1000);
+
+    const dayAbbreviation = startDate.toLocaleString('en-US', { weekday: 'short' });
+
+    const monthAbbreviation = startDate.toLocaleString('en-US', { month: 'short' });
+
+    const time = startDate.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+    return `${dayAbbreviation}. ${startDate.getDate()} ${monthAbbreviation}. ${time}`;
+}
+
+export { jsonToUser, jsonToSession, formatDuration, formatDate }

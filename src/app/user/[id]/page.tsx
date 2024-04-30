@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { checkBackend, fetchUserDetails, fetchSessions } from '@/app/lib/api';
-import { formatDuration, jsonToSession, jsonToUser } from '@/app/lib/utils';
+import { formatDate, formatDuration, jsonToSession, jsonToUser } from '@/app/lib/utils';
 import { User } from '@/app/types/user';
 import { Session } from '@/app/types/session';
 import SessionViewer from '@/app/components/session-viewer';
@@ -44,10 +44,10 @@ export default function Page({ params }: { params: { id: string } }) {
                         {sessionData.slice().reverse().map(session => (
                             <div key={session.id} className="card bg-base-100 shadow-xl m-6">
                                 <figure>
-                                    <SessionViewer session={session} width={300} height={200} />
+                                    <SessionViewer session={session} width={300} height={200} length={100} />
                                 </figure>
                                 <div className="card-body">
-                                <h2 className="card-title">{new Date(Number(session.startDate) * 1000).toLocaleString()}</h2>
+                                <h2 className="card-title">{formatDate(Number(session.startDate))}</h2>
                                 <p>Duration: {formatDuration(Number(session.endDate) - Number(session.startDate))}</p>
                                 <div className="card-actions justify-end">
                                     <button className="btn btn-primary">Analyse</button>
