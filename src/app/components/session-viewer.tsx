@@ -6,9 +6,10 @@ interface ChartProps {
     session: Session|undefined,
     width: number,
     height: number,
+    length: number,
 }
 
-const SessionViewer: React.FC<ChartProps> = ({ session, width = 600, height = 400 }) => {
+const SessionViewer: React.FC<ChartProps> = ({ session, width = 600, height = 400, length = 100 }) => {
     const svgRef = useRef<SVGSVGElement>(null);
 
     useEffect(() => {
@@ -30,7 +31,7 @@ const SessionViewer: React.FC<ChartProps> = ({ session, width = 600, height = 40
         const innerHeight = height - margin.top - margin.bottom;
 
         const xScale = d3.scaleLinear()
-            .domain([0, session.data.length -1])
+            .domain([0, Math.min(length - 1, session.data.length - 1)])
             .range([0, innerWidth])
 
         const yScale = d3.scaleLinear()
@@ -57,7 +58,7 @@ const SessionViewer: React.FC<ChartProps> = ({ session, width = 600, height = 40
         // X axis
 
         g.append('path')
-            .datum(session.data.map(d => d.x))
+            .datum(session.data.slice(0, length).map(d => d.x))
             .attr('fill', 'none')
             .attr('stroke', color('0'))
             .attr('stroke-width', 1.5)
@@ -65,14 +66,14 @@ const SessionViewer: React.FC<ChartProps> = ({ session, width = 600, height = 40
 
         g.append('text')
             .attr('x', innerWidth)
-            .attr('y', yScale(session.data[session.data.length - 1].x))
+            .attr('y', yScale(session.data[Math.min(length - 1, session.data.length - 1)].x))
             .attr('fill', color('0'))
             .text('X');
 
         // Z
 
         g.append('path')
-            .datum(session.data.map(d => d.z))
+            .datum(session.data.slice(0, length).map(d => d.z))
             .attr('fill', 'none')
             .attr('stroke', color('1'))
             .attr('stroke-width', 1.5)
@@ -80,14 +81,14 @@ const SessionViewer: React.FC<ChartProps> = ({ session, width = 600, height = 40
 
         g.append('text')
             .attr('x', innerWidth)
-            .attr('y', yScale(session.data[session.data.length - 1].z))
+            .attr('y', yScale(session.data[Math.min(length - 1, session.data.length - 1)].z))
             .attr('fill', color('1'))
             .text('Z');
 
         // Y
 
         g.append('path')
-            .datum(session.data.map(d => d.y))
+            .datum(session.data.slice(0, length).map(d => d.y))
             .attr('fill', 'none')
             .attr('stroke', color('2'))
             .attr('stroke-width', 1.5)
@@ -95,11 +96,11 @@ const SessionViewer: React.FC<ChartProps> = ({ session, width = 600, height = 40
 
         g.append('text')
             .attr('x', innerWidth)
-            .attr('y', yScale(session.data[session.data.length - 1].y))
+            .attr('y', yScale(session.data[Math.min(length - 1, session.data.length - 1)].y))
             .attr('fill', color('2'))
             .text('Y');
 
-    }, [session, width, height]);
+    }, [session, width, height, length]);
 
     return (
         <svg ref={svgRef} width={width} height={height}></svg>
