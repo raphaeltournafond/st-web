@@ -10,12 +10,12 @@ function jsonToUser(json: any): User {
     };
 }
 
-function jsonToAccelerometerData(json: any): AccelerometerData {
-    return {
-        x: json.x,
-        y: json.y,
-        z: json.z,
-    };
+function jsonToAccelerometerData(json: any): AccelerometerData[] {
+    const accelerometerDataList: AccelerometerData[] = JSON.parse(json).map((item: string) => {
+        const [x, y, z] = item.split(',').map(parseFloat);
+        return { x, y, z };
+    });
+    return accelerometerDataList;
 }
 
 function jsonToSession(json: any): Session {
@@ -23,7 +23,7 @@ function jsonToSession(json: any): Session {
         id: json.id,
         startDate: json.start_date,
         endDate: json.end_date,
-        data: json.data.map(jsonToAccelerometerData),
+        data: jsonToAccelerometerData(json.data),
         user: json.user,
     };
 }
