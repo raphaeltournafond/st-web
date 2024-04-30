@@ -28,4 +28,23 @@ function jsonToSession(json: any): Session {
     };
 }
 
-export {jsonToUser, jsonToSession}
+function formatDuration(durationInSeconds: number) {
+    const hours = Math.floor(durationInSeconds / 3600);
+    const minutes = Math.floor((durationInSeconds % 3600) / 60);
+    const seconds = Math.floor(durationInSeconds % 60);
+
+    let formattedDuration = '';
+    if (hours > 0) {
+        formattedDuration += `${hours}h `;
+    }
+    if (minutes > 0) {
+        formattedDuration += `${minutes}m `;
+    }
+    if (seconds > 0) {
+        formattedDuration += `${seconds}s`;
+    }
+
+    return formattedDuration.trim();
+}
+
+export { jsonToUser, jsonToSession, formatDuration }

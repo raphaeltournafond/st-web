@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { checkBackend, fetchUserDetails, fetchSessions } from '@/app/lib/api';
-import { jsonToSession, jsonToUser } from '@/app/lib/utils';
+import { formatDuration, jsonToSession, jsonToUser } from '@/app/lib/utils';
 import { User } from '@/app/types/user';
 import { Session } from '@/app/types/session';
 import SessionViewer from '@/app/components/session-viewer';
@@ -48,7 +48,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                 </figure>
                                 <div className="card-body">
                                 <h2 className="card-title">{new Date(Number(session.startDate) * 1000).toLocaleString()}</h2>
-                                <p>⏱️ {Math.floor(Number(session.endDate) - Number(session.startDate))}</p>
+                                <p>Duration: {formatDuration(Number(session.endDate) - Number(session.startDate))}</p>
                                 <div className="card-actions justify-end">
                                     <button className="btn btn-primary">Analyse</button>
                                 </div>
