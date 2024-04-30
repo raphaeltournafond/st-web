@@ -53,7 +53,7 @@ async function fetchUserDetails(id: string) {
     }
 }
 
-async function fetchSessions(id: string) {
+async function fetchSessionList(id: string) {
     try {
         return await fetchAPI(`${BASE_URL}${SESSION_URL}${id}/`, 'GET', undefined, null)
     } catch (error: any) {
@@ -62,4 +62,4 @@ async function fetchSessions(id: string) {
     }
 }
 
-export {checkBackend, fetchUserList, fetchUserDetails, fetchSessions}
+export {checkBackend, fetchUserList, fetchUserDetails, fetchSessionList}

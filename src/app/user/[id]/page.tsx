@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { checkBackend, fetchUserDetails, fetchSessions } from '@/app/lib/api';
+import { checkBackend, fetchUserDetails, fetchSessionList } from '@/app/lib/api';
 import { formatDate, formatDuration, jsonToSession, jsonToUser } from '@/app/lib/utils';
 import { User } from '@/app/types/user';
 import { Session } from '@/app/types/session';
@@ -14,12 +14,11 @@ export default function Page({ params }: { params: { id: string } }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Call the checkBackend function
                 await checkBackend();
                 let jsonData = await fetchUserDetails(params.id)
                 const userData: User = jsonToUser(jsonData);
                 setUserData(userData);
-                jsonData = await fetchSessions(params.id)
+                jsonData = await fetchSessionList(params.id)
                 const sessionData: Session[] = jsonData.map(jsonToSession)
                 setSessionData(sessionData);
             } catch (error: any) {
