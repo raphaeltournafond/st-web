@@ -32,11 +32,10 @@ const DataViewer: React.FC<ChartProps> = ({ data, width, height }) => {
         const margin = { top: 20, right: 30, bottom: 30, left: 50 };
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
-        const dataPadding = 5;
 
         const maxX = Math.max(...data.map(line => line.data.length));
-        const minY = Math.min(...data.map(line => Math.min(...line.data))) - dataPadding;
-        const maxY = Math.max(...data.map(line => Math.max(...line.data))) + dataPadding;
+        const minY = Math.min(...data.map(line => Math.min(...line.data))) * 1.2;
+        const maxY = Math.max(...data.map(line => Math.max(...line.data))) * 1.2;
 
         const xScale = d3.scaleLinear()
             .domain([0, maxX - 1])
@@ -70,8 +69,8 @@ const DataViewer: React.FC<ChartProps> = ({ data, width, height }) => {
                 .attr('d', line);
 
             g.append('text')
-                .attr('x', innerWidth)
-                .attr('y', yScale(lineData.data[lineData.data.length - 1]))
+                .attr('x', 0)
+                .attr('y', yScale(lineData.data[0]) - 10)
                 .attr('fill', lineData.color)
                 .text(lineData.label.toUpperCase());
         });

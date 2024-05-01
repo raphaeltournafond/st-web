@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { checkBackend, fetchSession } from '@/app/lib/api';
-import { Session, sessionDataToDataLines } from '@/app/types/session';
+import { Session, exportSessionData } from '@/app/types/session';
 import { jsonToSession } from '@/app/lib/utils';
 import DataViewer, { DataLine } from '@/app/components/session-viewer';
+import { displayPeaks, normalizeData } from '@/app/lib/processor';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [session, setSession] = useState<Session>();
@@ -12,7 +13,31 @@ export default function Page({ params }: { params: { id: string } }) {
     let dataLines: DataLine[] = []
 
     if (session) {
-        dataLines = sessionDataToDataLines(session.data);
+        const [xValues, yValues, zValues] = exportSessionData(normalizeData(session.data));
+        
+        dataLines.push({
+            data: xValues,
+            color: 'gray',
+            label: 'X'
+        });
+
+        dataLines.push({
+            data: yValues,
+            color: 'gray',
+            label: 'Y'
+        });
+
+        dataLines.push({
+            data: zValues,
+            color: 'gray',
+            label: 'Z'
+        });
+
+        dataLines.push({
+            data: displayPeaks(session.data),
+            color: 'red',
+            label: 'Steps',
+        });
     }
 
     useEffect(() => {

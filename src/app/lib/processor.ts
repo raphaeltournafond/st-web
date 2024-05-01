@@ -132,6 +132,8 @@ function highPassFilter(data: AccelerometerData[], cutoffFrequency: number, samp
     let prevY = data[0].y;
     let prevZ = data[0].z;
 
+    filteredData.push({ x: prevX, y: prevY, z: prevZ });
+
     for (let i = 1; i < data.length; i++) {
         const newX = alpha * (prevX + data[i].x - data[i - 1].x);
         const newY = alpha * (prevY + data[i].y - data[i - 1].y);
@@ -183,4 +185,35 @@ function thresholdData(data: AccelerometerData[], threshold: number): Accelerome
     return thresholdedData;
 }
 
-export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData}
+function displayPeaks(data: AccelerometerData[]): number[] {
+    const peaksIndices: number[] = [];
+    const gravity = 9.81;
+    const samplingFrequency = 0.1;
+    const highPassThreshold = 0.1;
+    const normalizedThreshold = 0.3;
+    const peakThreshold = 0.1;
+
+    console.log(data.length);
+    let processedData = removeGravity(data, gravity);
+    console.log(processedData.length);
+    processedData = highPassFilter(processedData, highPassThreshold, samplingFrequency);
+    console.log(processedData.length);
+    processedData = normalizeData(processedData);
+    console.log(processedData.length);
+    processedData = thresholdData(processedData, normalizedThreshold);
+    console.log(processedData.length);
+    const magnitudes = computeMagnitude(processedData);
+    console.log(magnitudes.length);
+
+    for (let i = 0; i < processedData.length; i++) {
+        if (magnitudes[i] > peakThreshold || magnitudes[i] < -peakThreshold) {
+            peaksIndices.push(magnitudes[i]);
+        } else {
+            peaksIndices.push(0)
+        }
+    }
+    
+    return peaksIndices;
+}
+
+export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, displayPeaks}
