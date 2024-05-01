@@ -6,7 +6,7 @@ import { formatDate, formatDuration, jsonToSession, jsonToUser } from '@/app/lib
 import { User } from '@/app/types/user';
 import { Session, sessionDataToDataLines } from '@/app/types/session';
 import { useRouter } from 'next/navigation';
-import DataViewer from '@/app/components/session-viewer';
+import DataViewer from '@/app/components/data-viewer';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [userData, setUserData] = useState<User>();

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { checkBackend, fetchSession } from '@/app/lib/api';
 import { Session, exportSessionData } from '@/app/types/session';
 import { jsonToSession } from '@/app/lib/utils';
-import DataViewer, { DataLine } from '@/app/components/session-viewer';
+import DataViewer, { DataLine } from '@/app/components/data-viewer';
 import { extractStepsStats, extractPeaks, normalizeData } from '@/app/lib/processor';
 
 export default function Page({ params }: { params: { id: string } }) {

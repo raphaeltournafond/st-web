@@ -1,4 +1,4 @@
-import { DataLine } from "../components/session-viewer"
+import { DataLine } from "../components/data-viewer"
 
 export interface AccelerometerData {
     x: number
