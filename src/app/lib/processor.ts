@@ -161,4 +161,19 @@ function computeMagnitude(data: AccelerometerData[]): number[] {
     return data.map(({ x, y, z }) => Math.sqrt(x * x + y * y + z * z));
 }
 
-export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, computeMagnitude}
+function normalizeData(data: AccelerometerData[]): AccelerometerData[] {
+    const magnitudes = computeMagnitude(data);
+
+    const maxMagnitude = Math.max(...magnitudes);
+
+    // Normalize each data point
+    const normalizedData: AccelerometerData[] = data.map(({ x, y, z }, index) => ({
+        x: x / maxMagnitude,
+        y: y / maxMagnitude,
+        z: z / maxMagnitude
+    }));
+
+    return normalizedData;
+}
+
+export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude}
