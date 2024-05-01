@@ -1,21 +1,34 @@
 'use client'
 
 import React, { useEffect, useState } from 'react';
-import { checkBackend, fetchUserDetails } from '@/app/lib/api';
-import { jsonToUser } from '@/app/lib/utils';
+import { checkBackend, fetchUserDetails, fetchSessionList } from '@/app/lib/api';
+import { formatDate, formatDuration, jsonToSession, jsonToUser } from '@/app/lib/utils';
 import { User } from '@/app/types/user';
+import { Session, sessionDataToDataLines } from '@/app/types/session';
+import { useRouter } from 'next/navigation';
+import DataViewer from '@/app/components/session-viewer';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [userData, setUserData] = useState<User>();
+    const [sessionData, setSessionData] = useState<Session[]>([]);
+
+    const router = useRouter();
+
+    const handleWatchSession = (sessionId: string) => {
+        // Navigate to the session page with the session ID
+        router.push(`/user/session/${sessionId}`);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // Call the checkBackend function
                 await checkBackend();
-                const jsonData = await fetchUserDetails(params.id)
-                const userData: User = jsonToUser(jsonData);
-                setUserData(userData);
+                let jsonData = await fetchUserDetails(params.id)
+                const userJsonData: User = jsonToUser(jsonData);
+                setUserData(userJsonData);
+                jsonData = await fetchSessionList(params.id)
+                const sessionJsonData: Session[] = jsonData.map(jsonToSession)
+                setSessionData(sessionJsonData);
             } catch (error: any) {
                 console.error('Error fetching data:', error.message);
             }
@@ -25,14 +38,30 @@ export default function Page({ params }: { params: { id: string } }) {
     }, [params.id]);
 
     return (
-        <main className='bg-base-100'>
-            <div className='container mx-auto py-8'>
+        <main className='bg-base-200'>
+            <div className='container mx-auto p-8'>
                 <div className='p-6'>
                     <div className='flex justify-between items-center'>
                         <div>
                             <p className='text-lg font-semibold'>Welcome {userData?.firstName}!</p>
                             <p className='text-md'>Check out your last sessions.</p>
                         </div>
+                    </div>
+                    <div className='p-6 flex flex-wrap justify-center'>
+                        {sessionData.slice().reverse().map(session => (
+                            <div key={session.id} className="card bg-base-100 shadow-xl m-6">
+                                <figure>
+                                    <DataViewer data={sessionDataToDataLines(session.data.slice(0, 100))} width={300} height={200} />
+                                </figure>
+                                <div className="card-body">
+                                <h2 className="card-title">{formatDate(Number(session.startDate))}</h2>
+                                <p>Duration: {formatDuration(Number(session.endDate) - Number(session.startDate))}</p>
+                                <div className="card-actions justify-end">
+                                    <button className="btn btn-primary" onClick={e => handleWatchSession(session.id.toString())}>Analyse</button>
+                                </div>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

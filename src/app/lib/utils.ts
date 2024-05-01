@@ -1,3 +1,4 @@
+import { AccelerometerData, Session } from "../types/session";
 import { User } from "../types/user";
 
 function jsonToUser(json: any): User {
@@ -9,4 +10,53 @@ function jsonToUser(json: any): User {
     };
 }
 
-export {jsonToUser}
+function jsonToAccelerometerData(json: any): AccelerometerData[] {
+    const accelerometerDataList: AccelerometerData[] = JSON.parse(json).map((item: string) => {
+        const [x, y, z] = item.split(',').map(parseFloat);
+        return { x, y, z };
+    });
+    return accelerometerDataList;
+}
+
+function jsonToSession(json: any): Session {
+    return {
+        id: json.id,
+        startDate: json.start_date,
+        endDate: json.end_date,
+        data: jsonToAccelerometerData(json.data),
+        user: json.user,
+    };
+}
+
+function formatDuration(durationInSeconds: number) {
+    const hours = Math.floor(durationInSeconds / 3600);
+    const minutes = Math.floor((durationInSeconds % 3600) / 60);
+    const seconds = Math.floor(durationInSeconds % 60);
+
+    let formattedDuration = '';
+    if (hours > 0) {
+        formattedDuration += `${hours}h `;
+    }
+    if (minutes > 0) {
+        formattedDuration += `${minutes}m `;
+    }
+    if (seconds > 0) {
+        formattedDuration += `${seconds}s`;
+    }
+
+    return formattedDuration.trim();
+}
+
+function formatDate(sessionDate: number) {
+    const startDate = new Date(sessionDate * 1000);
+
+    const dayAbbreviation = startDate.toLocaleString('en-US', { weekday: 'short' });
+
+    const monthAbbreviation = startDate.toLocaleString('en-US', { month: 'short' });
+
+    const time = startDate.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit' });
+
+    return `${dayAbbreviation}. ${startDate.getDate()} ${monthAbbreviation}. ${time}`;
+}
+
+export { jsonToUser, jsonToSession, formatDuration, formatDate }
