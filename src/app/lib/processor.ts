@@ -104,4 +104,31 @@ function medianFilter(data: AccelerometerData[], windowSize: number): Accelerome
     return result;
 }
 
-export {noiseReduction, movingAverage, medianFilter}
+function removeGravity(data: AccelerometerData[], gravityFactor: number): AccelerometerData[] {
+    const filteredData: AccelerometerData[] = [];
+    const alpha = 2 * Math.PI * gravityFactor / 1000;
+
+    let gravityX = 0;
+    let gravityY = 0;
+    let gravityZ = 0;
+
+    for (let i = 0; i < data.length; i++) {
+        const current = data[i];
+
+        // Low-pass filter to estimate gravity
+        gravityX = alpha * current.x + (1 - alpha) * gravityX;
+        gravityY = alpha * current.y + (1 - alpha) * gravityY;
+        gravityZ = alpha * current.z + (1 - alpha) * gravityZ;
+
+        // Subtract estimated gravity from current acceleration to obtain dynamic component
+        const dynamicX = current.x - gravityX;
+        const dynamicY = current.y - gravityY;
+        const dynamicZ = current.z - gravityZ;
+
+        filteredData.push({ x: dynamicX, y: dynamicY, z: dynamicZ });
+    }
+
+    return filteredData;
+}
+
+export {noiseReduction, movingAverage, medianFilter, removeGravity}
