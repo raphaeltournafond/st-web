@@ -25,7 +25,7 @@ const DataViewer: React.FC<ChartProps> = ({ data, width, height }) => {
         if (!svgRef.current) {
             console.error('DataViewer: svgRef undefined');
             return;
-        } 
+        }
 
         const svg = d3.select(svgRef.current);
 

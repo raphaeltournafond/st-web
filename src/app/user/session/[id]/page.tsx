@@ -25,10 +25,8 @@ export default function Page({ params }: { params: { id: string } }) {
                 console.error('Error fetching data:', error.message);
             }
         };
-
         fetchData();
     }, [params.id]);
-    
 
     return (
         <main className='bg-base-200'>
