@@ -32,16 +32,18 @@ const DataViewer: React.FC<ChartProps> = ({ data, width, height }) => {
         const margin = { top: 20, right: 30, bottom: 30, left: 50 };
         const innerWidth = width - margin.left - margin.right;
         const innerHeight = height - margin.top - margin.bottom;
+        const dataPadding = 5;
 
         const maxX = Math.max(...data.map(line => line.data.length));
-        const maxY = Math.max(...data.map(line => Math.max(...line.data)));
+        const minY = Math.min(...data.map(line => Math.min(...line.data))) - dataPadding;
+        const maxY = Math.max(...data.map(line => Math.max(...line.data))) + dataPadding;
 
         const xScale = d3.scaleLinear()
             .domain([0, maxX - 1])
             .range([0, innerWidth]);
 
         const yScale = d3.scaleLinear()
-            .domain([0, maxY])
+            .domain([minY, maxY])
             .range([innerHeight, 0]);
 
         const line = d3.line<number>()
