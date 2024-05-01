@@ -64,6 +64,20 @@ function movingAverage(data: AccelerometerData[], windowSize: number): Accelerom
     return result;
 }
 
+function reduceDataToSize(data: AccelerometerData[], n: number): AccelerometerData[] {
+    const originalLength = data.length;
+    const ratio = originalLength / n;
+    const windowSize = Math.ceil(ratio);
+
+    if (originalLength <= n) {
+        return data;
+    }
+
+    const smoothedData = movingAverage(data, windowSize);
+
+    return smoothedData.slice(0, n);
+}
+
 function medianFilter(data: AccelerometerData[], windowSize: number): AccelerometerData[] {
     const result: AccelerometerData[] = [];
 
@@ -256,4 +270,4 @@ function calculateStepRegularity(stepTimeDifferences: number[]): number {
     return stepRegularity * samplingFrequency;
 }
 
-export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, extractPeaks, extractStepsStats}
+export {noiseReduction, movingAverage, reduceDataToSize, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, extractPeaks, extractStepsStats}
