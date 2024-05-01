@@ -5,7 +5,7 @@ import { checkBackend, fetchSession } from '@/app/lib/api';
 import { Session, exportSessionData } from '@/app/types/session';
 import { jsonToSession } from '@/app/lib/utils';
 import DataViewer, { DataLine } from '@/app/components/session-viewer';
-import { displayPeaks, normalizeData } from '@/app/lib/processor';
+import { countSteps, extractPeaks, normalizeData } from '@/app/lib/processor';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [session, setSession] = useState<Session>();
@@ -33,8 +33,12 @@ export default function Page({ params }: { params: { id: string } }) {
             label: 'Z'
         });
 
+        const peaks = extractPeaks(session.data)
+        const stepsCount = countSteps(peaks);
+        console.log(stepsCount);
+
         dataLines.push({
-            data: displayPeaks(session.data),
+            data: peaks,
             color: 'red',
             label: 'Steps',
         });

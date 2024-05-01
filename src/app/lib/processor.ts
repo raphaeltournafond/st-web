@@ -185,25 +185,19 @@ function thresholdData(data: AccelerometerData[], threshold: number): Accelerome
     return thresholdedData;
 }
 
-function displayPeaks(data: AccelerometerData[]): number[] {
+function extractPeaks(data: AccelerometerData[]): number[] {
     const peaksIndices: number[] = [];
     const gravity = 9.81;
     const samplingFrequency = 0.1;
     const highPassThreshold = 0.1;
-    const normalizedThreshold = 0.3;
+    const normalizedThreshold = 0.25;
     const peakThreshold = 0.1;
 
-    console.log(data.length);
     let processedData = removeGravity(data, gravity);
-    console.log(processedData.length);
     processedData = highPassFilter(processedData, highPassThreshold, samplingFrequency);
-    console.log(processedData.length);
     processedData = normalizeData(processedData);
-    console.log(processedData.length);
     processedData = thresholdData(processedData, normalizedThreshold);
-    console.log(processedData.length);
     const magnitudes = computeMagnitude(processedData);
-    console.log(magnitudes.length);
 
     for (let i = 0; i < processedData.length; i++) {
         if (magnitudes[i] > peakThreshold || magnitudes[i] < -peakThreshold) {
@@ -216,4 +210,20 @@ function displayPeaks(data: AccelerometerData[]): number[] {
     return peaksIndices;
 }
 
-export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, displayPeaks}
+function countSteps(magnitudes: number[]): number {
+    let stepCount = 0;
+    let passedMaximum = false;
+
+    for (let i = 1; i < magnitudes.length - 1; i++) {
+        if (magnitudes[i] > magnitudes[i - 1] && magnitudes[i] > magnitudes[i + 1]) {
+            passedMaximum = true;
+        }
+        else if (passedMaximum && magnitudes[i] < magnitudes[i - 1]) {
+            stepCount++;
+            passedMaximum = false;
+        }
+    }
+    return stepCount;
+}
+
+export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, extractPeaks, countSteps}
