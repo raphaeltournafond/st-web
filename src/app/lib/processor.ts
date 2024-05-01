@@ -1,5 +1,7 @@
 import { AccelerometerData } from "../types/session";
 
+const samplingFrequency = 0.1;
+
 function noiseReduction(data: AccelerometerData[], windowSize: number): AccelerometerData[] {
     const result: AccelerometerData[] = [];
 
@@ -188,7 +190,6 @@ function thresholdData(data: AccelerometerData[], threshold: number): Accelerome
 function extractPeaks(data: AccelerometerData[]): number[] {
     const peaksIndices: number[] = [];
     const gravity = 9.81;
-    const samplingFrequency = 0.1;
     const highPassThreshold = 0.1;
     const normalizedThreshold = 0.25;
     const peakThreshold = 0.1;
@@ -210,9 +211,11 @@ function extractPeaks(data: AccelerometerData[]): number[] {
     return peaksIndices;
 }
 
-function countSteps(magnitudes: number[]): number {
+function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequency: number } {
     let stepCount = 0;
     let passedMaximum = false;
+    let previousStepTime = 0;
+    let totalStepTimeDifference = 0;
 
     for (let i = 1; i < magnitudes.length - 1; i++) {
         if (magnitudes[i] > magnitudes[i - 1] && magnitudes[i] > magnitudes[i + 1]) {
@@ -220,10 +223,19 @@ function countSteps(magnitudes: number[]): number {
         }
         else if (passedMaximum && magnitudes[i] < magnitudes[i - 1]) {
             stepCount++;
+            const currentStepTime = i;
+            if (previousStepTime !== 0) {
+                totalStepTimeDifference += currentStepTime - previousStepTime;
+                console.log(totalStepTimeDifference)
+            }
+            previousStepTime = currentStepTime;
             passedMaximum = false;
         }
     }
-    return stepCount;
+
+    const stepFrequency = totalStepTimeDifference / (stepCount - 1) * samplingFrequency; // exclude the first step, in seconds
+
+    return { stepCount, stepFrequency };
 }
 
-export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, extractPeaks, countSteps}
+export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, extractPeaks, extractStepsStats}
