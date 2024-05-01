@@ -67,4 +67,41 @@ function movingAverage(data: AccelerometerData[], windowSize: number): Accelerom
     return result;
 }
 
-export {noiseReduction, movingAverage}
+function medianFilter(data: AccelerometerData[], windowSize: number): AccelerometerData[] {
+    const result: AccelerometerData[] = [];
+
+    // Helper function to calculate median
+    function calculateMedian(arr: number[]): number {
+        const sortedArr = arr.slice().sort((a, b) => a - b);
+        const mid = Math.floor(sortedArr.length / 2);
+        return sortedArr.length % 2 === 0 ? (sortedArr[mid - 1] + sortedArr[mid]) / 2 : sortedArr[mid];
+    }
+
+    for (let i = 0; i < data.length; i++) {
+        const windowStart = Math.max(0, i - Math.floor(windowSize / 2));
+        const windowEnd = Math.min(data.length - 1, i + Math.ceil(windowSize / 2));
+
+        const windowX: number[] = [];
+        const windowY: number[] = [];
+        const windowZ: number[] = [];
+
+        // Collect values within the window
+        for (let j = windowStart; j <= windowEnd; j++) {
+            windowX.push(data[j].x);
+            windowY.push(data[j].y);
+            windowZ.push(data[j].z);
+        }
+
+        // Calculate median for each axis
+        const medianX = calculateMedian(windowX);
+        const medianY = calculateMedian(windowY);
+        const medianZ = calculateMedian(windowZ);
+
+        // Store the median values
+        result.push({ x: medianX, y: medianY, z: medianZ });
+    }
+
+    return result;
+}
+
+export {noiseReduction, movingAverage, medianFilter}
