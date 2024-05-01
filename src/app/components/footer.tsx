@@ -5,7 +5,8 @@ const Footer = () => {
     return (
         <footer className="footer footer-center p-10 bg-neutral text-neutral-content">
             <aside>
-                <Image className="mask mask-squircle" src={"/AQ-Tech_logo.jpg"} width={200} height={200} alt="Logo AQTech" />
+                <Image src={"/logo-aq-tech.png"} width={150} height={150} alt="Logo AQTech" />
+                <p className="font-bold">Agence d&apos;ingénierie <span className="text-primary">multidisciplinaire</span>.</p>
                 <br />
                 <p>Copyright © 2024 - Tout droits réservés</p>
             </aside>
