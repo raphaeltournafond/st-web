@@ -34,9 +34,10 @@ export default function Page({ params }: { params: { id: string } }) {
         });
 
         const peaks = extractPeaks(session.data)
-        const {stepCount, stepFrequency} = extractStepsStats(peaks);
+        const {stepCount, stepFrequency, stepRegularity} = extractStepsStats(peaks);
         console.log(stepCount);
         console.log(stepFrequency);
+        console.log(stepRegularity);
 
         dataLines.push({
             data: peaks,

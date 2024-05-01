@@ -211,11 +211,12 @@ function extractPeaks(data: AccelerometerData[]): number[] {
     return peaksIndices;
 }
 
-function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequency: number } {
+function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequency: number; stepRegularity: number } {
     let stepCount = 0;
     let passedMaximum = false;
     let previousStepTime = 0;
     let totalStepTimeDifference = 0;
+    const stepTimeDifferences: number[] = [];
 
     for (let i = 1; i < magnitudes.length - 1; i++) {
         if (magnitudes[i] > magnitudes[i - 1] && magnitudes[i] > magnitudes[i + 1]) {
@@ -223,10 +224,11 @@ function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequ
         }
         else if (passedMaximum && magnitudes[i] < magnitudes[i - 1]) {
             stepCount++;
-            const currentStepTime = i;
+            const currentStepTime = i; // Calculate time of current step detection
             if (previousStepTime !== 0) {
-                totalStepTimeDifference += currentStepTime - previousStepTime;
-                console.log(totalStepTimeDifference)
+                const stepTimeDifference = currentStepTime - previousStepTime;
+                totalStepTimeDifference += stepTimeDifference; // Calculate time difference between consecutive steps
+                stepTimeDifferences.push(stepTimeDifference);
             }
             previousStepTime = currentStepTime;
             passedMaximum = false;
@@ -235,7 +237,23 @@ function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequ
 
     const stepFrequency = totalStepTimeDifference / (stepCount - 1) * samplingFrequency; // exclude the first step, in seconds
 
-    return { stepCount, stepFrequency };
+    const stepRegularity = calculateStepRegularity(stepTimeDifferences);
+
+    return { stepCount, stepFrequency, stepRegularity };
+}
+
+function calculateStepRegularity(stepTimeDifferences: number[]): number {
+    if (stepTimeDifferences.length <= 1) {
+        return 0;
+    }
+
+    // Calculate the standard deviation of step time differences
+    const meanStepTimeDifference = stepTimeDifferences.reduce((acc, curr) => acc + curr, 0) / stepTimeDifferences.length;
+    const squaredDifferences = stepTimeDifferences.map(diff => Math.pow(diff - meanStepTimeDifference, 2));
+    const variance = squaredDifferences.reduce((acc, curr) => acc + curr, 0) / (stepTimeDifferences.length - 1);
+    const stepRegularity = Math.sqrt(variance);
+
+    return stepRegularity * samplingFrequency;
 }
 
 export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, extractPeaks, extractStepsStats}
