@@ -10,11 +10,13 @@ import { extractStepsStats, extractPeaks, normalizeData } from '@/app/lib/proces
 export default function Page({ params }: { params: { id: string } }) {
     const [session, setSession] = useState<Session>();
 
-    let dataLines: DataLine[] = []
+    let dataLines: DataLine[] = [];
+
+    let length: number = 1000;
 
     if (session) {
         const [xValues, yValues, zValues] = exportSessionData(normalizeData(session.data));
-        
+
         dataLines.push({
             data: xValues,
             color: 'gray',
@@ -34,7 +36,8 @@ export default function Page({ params }: { params: { id: string } }) {
         });
 
         const peaks = extractPeaks(session.data)
-        const {stepCount, stepFrequency, stepRegularity} = extractStepsStats(peaks);
+        length = peaks.length * 10;
+        const { stepCount, stepFrequency, stepRegularity } = extractStepsStats(peaks);
         console.log(stepCount);
         console.log(stepFrequency);
         console.log(stepRegularity);
@@ -60,8 +63,13 @@ export default function Page({ params }: { params: { id: string } }) {
     }, [params.id]);
 
     return (
-        <main className='bg-base-200'>
-            <DataViewer data={dataLines} width={1600} height={900}/>
+        <main className='bg-base-200 min-h-screen flex items-center justify-center'>
+            <div className="container mx-auto p-4">
+                <h1 className="text-3xl font-bold text-center mb-8">Session analysis</h1>
+                <div className="bg-base-100 rounded-lg shadow-lg m-6 overflow-x-auto">
+                    <DataViewer data={dataLines} width={length} height={600} />
+                </div>
+            </div>
         </main>
     );
 }
