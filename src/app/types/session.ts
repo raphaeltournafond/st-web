@@ -36,19 +36,19 @@ export function sessionDataToDataLines(sessionData: AccelerometerData[]): DataLi
     dataLines.push({
         data: xValues,
         color: '#FFDAB9',
-        label: 'X'
+        label: ''
     });
 
     dataLines.push({
         data: yValues,
         color: '#ADD8E6',
-        label: 'Y'
+        label: ''
     });
 
     dataLines.push({
         data: zValues,
         color: '#FFA07A',
-        label: 'Z'
+        label: ''
     });
 
     return dataLines;
