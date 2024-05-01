@@ -80,5 +80,4 @@ const DataViewer: React.FC<ChartProps> = ({ data, width, height }) => {
         <svg ref={svgRef} width={width} height={height}></svg>
     );
 };
-
 export default DataViewer;
