@@ -157,4 +157,8 @@ function highPassFilter(data: AccelerometerData[], cutoffFrequency: number, samp
     return filteredData;
 }
 
-export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter}
+function computeMagnitude(data: AccelerometerData[]): number[] {
+    return data.map(({ x, y, z }) => Math.sqrt(x * x + y * y + z * z));
+}
+
+export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, computeMagnitude}
