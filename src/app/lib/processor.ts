@@ -131,4 +131,30 @@ function removeGravity(data: AccelerometerData[], gravityFactor: number): Accele
     return filteredData;
 }
 
-export {noiseReduction, movingAverage, medianFilter, removeGravity}
+function highPassFilter(data: AccelerometerData[], cutoffFrequency: number, samplingFrequency: number = 0.1): AccelerometerData[] {
+    const RC = 1.0 / (cutoffFrequency * 2 * Math.PI);
+    const dt = samplingFrequency;
+
+    let alpha = RC / (RC + dt);
+    let filteredData: AccelerometerData[] = [];
+
+    let prevX = data[0].x;
+    let prevY = data[0].y;
+    let prevZ = data[0].z;
+
+    for (let i = 1; i < data.length; i++) {
+        const newX = alpha * (prevX + data[i].x - data[i - 1].x);
+        const newY = alpha * (prevY + data[i].y - data[i - 1].y);
+        const newZ = alpha * (prevZ + data[i].z - data[i - 1].z);
+
+        filteredData.push({ x: newX, y: newY, z: newZ });
+
+        prevX = newX;
+        prevY = newY;
+        prevZ = newZ;
+    }
+
+    return filteredData;
+}
+
+export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter}
