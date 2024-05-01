@@ -4,9 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { checkBackend, fetchUserDetails, fetchSessionList } from '@/app/lib/api';
 import { formatDate, formatDuration, jsonToSession, jsonToUser } from '@/app/lib/utils';
 import { User } from '@/app/types/user';
-import { Session } from '@/app/types/session';
-import SessionViewer from '@/app/components/session-viewer';
+import { Session, sessionDataToDataLines } from '@/app/types/session';
 import { useRouter } from 'next/navigation';
+import DataViewer from '@/app/components/session-viewer';
 
 export default function Page({ params }: { params: { id: string } }) {
     const [userData, setUserData] = useState<User>();
@@ -51,7 +51,7 @@ export default function Page({ params }: { params: { id: string } }) {
                         {sessionData.slice().reverse().map(session => (
                             <div key={session.id} className="card bg-base-100 shadow-xl m-6">
                                 <figure>
-                                    <SessionViewer session={session} width={300} height={200} length={100} />
+                                    <DataViewer data={sessionDataToDataLines(session.data.slice(0, 100))} width={300} height={200} />
                                 </figure>
                                 <div className="card-body">
                                 <h2 className="card-title">{formatDate(Number(session.startDate))}</h2>

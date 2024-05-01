@@ -2,19 +2,25 @@
 
 import React, { useEffect, useState } from 'react';
 import { checkBackend, fetchSession } from '@/app/lib/api';
-import { Session } from '@/app/types/session';
-import SessionViewer from '@/app/components/session-viewer';
+import { Session, sessionDataToDataLines } from '@/app/types/session';
 import { jsonToSession } from '@/app/lib/utils';
+import DataViewer, { DataLine } from '@/app/components/session-viewer';
 
 export default function Page({ params }: { params: { id: string } }) {
-    const [sessionData, setSessionData] = useState<Session>();
+    const [session, setSession] = useState<Session>();
+
+    let dataLines: DataLine[] = []
+
+    if (session) {
+        dataLines = sessionDataToDataLines(session.data);
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 await checkBackend();
                 const sessionJsonData = await fetchSession(params.id)
-                setSessionData(jsonToSession(sessionJsonData))
+                setSession(jsonToSession(sessionJsonData))
             } catch (error: any) {
                 console.error('Error fetching data:', error.message);
             }
@@ -22,10 +28,11 @@ export default function Page({ params }: { params: { id: string } }) {
 
         fetchData();
     }, [params.id]);
+    
 
     return (
         <main className='bg-base-200'>
-            <SessionViewer session={sessionData} width={1600} height={900} length={sessionData?.data.length ?? 0}/>
+            <DataViewer data={dataLines} width={1600} height={900}/>
         </main>
     );
 }
