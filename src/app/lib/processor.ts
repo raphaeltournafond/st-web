@@ -73,9 +73,41 @@ function reduceDataToSize(data: AccelerometerData[], n: number): AccelerometerDa
         return data;
     }
 
-    const smoothedData = movingAverage(data, windowSize);
+    const result: AccelerometerData[] = [];
+    let windowSum: AccelerometerData = { x: 0, y: 0, z: 0 };
 
-    return smoothedData.slice(0, n);
+    for (let i = 0; i < windowSize; i++) {
+        windowSum.x += data[i].x;
+        windowSum.y += data[i].y;
+        windowSum.z += data[i].z;
+    }
+
+    result.push({
+        x: windowSum.x / windowSize,
+        y: windowSum.y / windowSize,
+        z: windowSum.z / windowSize
+    });
+
+    for (let i = windowSize; i < originalLength; i += windowSize) {
+        windowSum.x = 0;
+        windowSum.y = 0;
+        windowSum.z = 0;
+        const endIndex = Math.min(i + windowSize, originalLength);
+
+        for (let j = i; j < endIndex; j++) {
+            windowSum.x += data[j].x;
+            windowSum.y += data[j].y;
+            windowSum.z += data[j].z;
+        }
+
+        result.push({
+            x: windowSum.x / windowSize,
+            y: windowSum.y / windowSize,
+            z: windowSum.z / windowSize
+        });
+    }
+
+    return result;
 }
 
 function medianFilter(data: AccelerometerData[], windowSize: number): AccelerometerData[] {
