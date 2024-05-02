@@ -1,5 +1,7 @@
 import { AccelerometerData } from "../types/session";
 
+const samplingFrequency = 0.1;
+
 function noiseReduction(data: AccelerometerData[], windowSize: number): AccelerometerData[] {
     const result: AccelerometerData[] = [];
 
@@ -35,28 +37,69 @@ function movingAverage(data: AccelerometerData[], windowSize: number): Accelerom
     const result: AccelerometerData[] = [];
     let windowSum: AccelerometerData = { x: 0, y: 0, z: 0 };
 
-    // Initialize the window sum with the first window
     for (let i = 0; i < windowSize; i++) {
         windowSum.x += data[i].x;
         windowSum.y += data[i].y;
         windowSum.z += data[i].z;
     }
 
-    // Calculate the moving average for the first data point
     result.push({
         x: windowSum.x / windowSize,
         y: windowSum.y / windowSize,
         z: windowSum.z / windowSize
     });
 
-    // Slide the window and update the moving average for each subsequent data point
     for (let i = windowSize; i < data.length; i++) {
-        // Update the window sum by removing the outgoing data point and adding the incoming data point
         windowSum.x += data[i].x - data[i - windowSize].x;
         windowSum.y += data[i].y - data[i - windowSize].y;
         windowSum.z += data[i].z - data[i - windowSize].z;
 
-        // Calculate the average of the current window and store it in the result array
+        result.push({
+            x: windowSum.x / windowSize,
+            y: windowSum.y / windowSize,
+            z: windowSum.z / windowSize
+        });
+    }
+
+    return result;
+}
+
+function reduceDataToSize(data: AccelerometerData[], n: number): AccelerometerData[] {
+    const originalLength = data.length;
+    const ratio = originalLength / n;
+    const windowSize = Math.ceil(ratio);
+
+    if (originalLength <= n) {
+        return data;
+    }
+
+    const result: AccelerometerData[] = [];
+    let windowSum: AccelerometerData = { x: 0, y: 0, z: 0 };
+
+    for (let i = 0; i < windowSize; i++) {
+        windowSum.x += data[i].x;
+        windowSum.y += data[i].y;
+        windowSum.z += data[i].z;
+    }
+
+    result.push({
+        x: windowSum.x / windowSize,
+        y: windowSum.y / windowSize,
+        z: windowSum.z / windowSize
+    });
+
+    for (let i = windowSize; i < originalLength; i += windowSize) {
+        windowSum.x = 0;
+        windowSum.y = 0;
+        windowSum.z = 0;
+        const endIndex = Math.min(i + windowSize, originalLength);
+
+        for (let j = i; j < endIndex; j++) {
+            windowSum.x += data[j].x;
+            windowSum.y += data[j].y;
+            windowSum.z += data[j].z;
+        }
+
         result.push({
             x: windowSum.x / windowSize,
             y: windowSum.y / windowSize,
@@ -70,7 +113,6 @@ function movingAverage(data: AccelerometerData[], windowSize: number): Accelerom
 function medianFilter(data: AccelerometerData[], windowSize: number): AccelerometerData[] {
     const result: AccelerometerData[] = [];
 
-    // Helper function to calculate median
     function calculateMedian(arr: number[]): number {
         const sortedArr = arr.slice().sort((a, b) => a - b);
         const mid = Math.floor(sortedArr.length / 2);
@@ -85,14 +127,12 @@ function medianFilter(data: AccelerometerData[], windowSize: number): Accelerome
         const windowY: number[] = [];
         const windowZ: number[] = [];
 
-        // Collect values within the window
         for (let j = windowStart; j <= windowEnd; j++) {
             windowX.push(data[j].x);
             windowY.push(data[j].y);
             windowZ.push(data[j].z);
         }
 
-        // Calculate median for each axis
         const medianX = calculateMedian(windowX);
         const medianY = calculateMedian(windowY);
         const medianZ = calculateMedian(windowZ);
@@ -115,12 +155,10 @@ function removeGravity(data: AccelerometerData[], gravityFactor: number): Accele
     for (let i = 0; i < data.length; i++) {
         const current = data[i];
 
-        // Low-pass filter to estimate gravity
         gravityX = alpha * current.x + (1 - alpha) * gravityX;
         gravityY = alpha * current.y + (1 - alpha) * gravityY;
         gravityZ = alpha * current.z + (1 - alpha) * gravityZ;
 
-        // Subtract estimated gravity from current acceleration to obtain dynamic component
         const dynamicX = current.x - gravityX;
         const dynamicY = current.y - gravityY;
         const dynamicZ = current.z - gravityZ;
@@ -141,6 +179,8 @@ function highPassFilter(data: AccelerometerData[], cutoffFrequency: number, samp
     let prevX = data[0].x;
     let prevY = data[0].y;
     let prevZ = data[0].z;
+
+    filteredData.push({ x: prevX, y: prevY, z: prevZ });
 
     for (let i = 1; i < data.length; i++) {
         const newX = alpha * (prevX + data[i].x - data[i - 1].x);
@@ -166,7 +206,6 @@ function normalizeData(data: AccelerometerData[]): AccelerometerData[] {
 
     const maxMagnitude = Math.max(...magnitudes);
 
-    // Normalize each data point
     const normalizedData: AccelerometerData[] = data.map(({ x, y, z }, index) => ({
         x: x / maxMagnitude,
         y: y / maxMagnitude,
@@ -176,4 +215,100 @@ function normalizeData(data: AccelerometerData[]): AccelerometerData[] {
     return normalizedData;
 }
 
-export {noiseReduction, movingAverage, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude}
+function thresholdData(data: AccelerometerData[], threshold: number): AccelerometerData[] {
+    const thresholdedData: AccelerometerData[] = [];
+
+    for (let i = 0; i < data.length; i++) {
+        const { x, y, z } = data[i];
+        
+        const magnitude = Math.sqrt(x * x + y * y + z * z);
+        
+        if (magnitude >= threshold) {
+            thresholdedData.push({ x, y, z });
+        } else {
+            thresholdedData.push({ x: 0, y: 0, z: 0 });
+        }
+    }
+
+    return thresholdedData;
+}
+
+function extractPeaks(data: AccelerometerData[]): number[] {
+    const peaksIndices: number[] = [];
+    const gravity = 9.81;
+    const highPassThreshold = 0.1;
+    const normalizedThreshold = 0.25;
+    const peakThreshold = 0.1;
+
+    let processedData = removeGravity(data, gravity);
+    processedData = highPassFilter(processedData, highPassThreshold, samplingFrequency);
+    processedData = normalizeData(processedData);
+    processedData = thresholdData(processedData, normalizedThreshold);
+    const magnitudes = computeMagnitude(processedData);
+
+    for (let i = 0; i < processedData.length; i++) {
+        if (magnitudes[i] > peakThreshold || magnitudes[i] < -peakThreshold) {
+            peaksIndices.push(magnitudes[i]);
+        } else {
+            peaksIndices.push(0)
+        }
+    }
+    
+    return peaksIndices;
+}
+
+function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequency: number; stepRegularity: number; averageMagnitudeVariation: number } {
+    let stepCount = 0;
+    let passedMaximum = false;
+    let previousStepTime = 0;
+    let previousStepMagnitude = 0;
+    let totalStepTimeDifference = 0;
+    const stepTimeDifferences: number[] = [];
+    const magnitudeVariationsPercentage: number[] = [];
+
+    for (let i = 1; i < magnitudes.length - 1; i++) {
+        if (magnitudes[i] > magnitudes[i - 1] && magnitudes[i] > magnitudes[i + 1]) {
+            passedMaximum = true;
+        }
+        else if (passedMaximum && magnitudes[i] < magnitudes[i - 1]) {
+            stepCount++;
+            const currentStepTime = i; // Calculate time of current step detection
+            if (previousStepTime !== 0) {
+                const stepTimeDifference = currentStepTime - previousStepTime;
+                totalStepTimeDifference += stepTimeDifference; // Calculate time difference between consecutive steps
+                stepTimeDifferences.push(stepTimeDifference);
+            }
+            if (stepCount > 1) {
+                const magnitudeVariationPercentage = Math.abs((magnitudes[i - 1] - previousStepMagnitude) / previousStepMagnitude) * 100;
+                magnitudeVariationsPercentage.push(magnitudeVariationPercentage);
+            }
+            previousStepTime = currentStepTime;
+            previousStepMagnitude = magnitudes[i - 1];
+            passedMaximum = false;
+        }
+    }
+
+    const stepFrequency = totalStepTimeDifference / (stepCount - 1) * samplingFrequency; // exclude the first step, in seconds
+
+    const stepRegularity = (1 - (stepFrequency - calculateStepRegularity(stepTimeDifferences)) / stepFrequency) * 100;
+
+    const averageMagnitudeVariation = magnitudeVariationsPercentage.reduce((acc, curr) => acc + curr, 0) / magnitudeVariationsPercentage.length;
+
+    return { stepCount, stepFrequency, stepRegularity, averageMagnitudeVariation };
+}
+
+function calculateStepRegularity(stepTimeDifferences: number[]): number {
+    if (stepTimeDifferences.length <= 1) {
+        return 0;
+    }
+
+    // Calculate the standard deviation of step time differences
+    const meanStepTimeDifference = stepTimeDifferences.reduce((acc, curr) => acc + curr, 0) / stepTimeDifferences.length;
+    const squaredDifferences = stepTimeDifferences.map(diff => Math.pow(diff - meanStepTimeDifference, 2));
+    const variance = squaredDifferences.reduce((acc, curr) => acc + curr, 0) / (stepTimeDifferences.length - 1);
+    const stepRegularity = Math.sqrt(variance);
+
+    return stepRegularity * samplingFrequency;
+}
+
+export {noiseReduction, movingAverage, reduceDataToSize, medianFilter, removeGravity, highPassFilter, normalizeData, computeMagnitude, thresholdData, extractPeaks, extractStepsStats}

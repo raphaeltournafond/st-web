@@ -1,4 +1,4 @@
-import { DataLine } from "../components/session-viewer"
+import { DataLine } from "../components/data-viewer"
 
 export interface AccelerometerData {
     x: number
@@ -35,20 +35,20 @@ export function sessionDataToDataLines(sessionData: AccelerometerData[]): DataLi
         
     dataLines.push({
         data: xValues,
-        color: 'red',
-        label: 'X'
+        color: '#FFDAB9',
+        label: ''
     });
 
     dataLines.push({
         data: yValues,
-        color: 'green',
-        label: 'Y'
+        color: '#ADD8E6',
+        label: ''
     });
 
     dataLines.push({
         data: zValues,
-        color: 'blue',
-        label: 'Z'
+        color: '#FFA07A',
+        label: ''
     });
 
     return dataLines;
