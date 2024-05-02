@@ -111,9 +111,9 @@ export default function Page({ params }: { params: { id: string } }) {
                                 </svg>
                             </div>
                             <div className="flex flex-col">
-                                <div className="stat-title text-lg">Deviation</div>
+                                <div className="stat-title text-lg">Rythm</div>
                                 <div className="stat-value">{stepRegularity.toFixed(1)}%</div>
-                                <div className="stat-desc text-sm">average irregularity</div>
+                                <div className="stat-desc text-sm">average deviation</div>
                             </div>
                         </div>
 
@@ -124,9 +124,9 @@ export default function Page({ params }: { params: { id: string } }) {
                                 </svg>
                             </div>
                             <div className="flex flex-col">
-                                <div className="stat-title text-lg">Variation</div>
+                                <div className="stat-title text-lg">Force</div>
                                 <div className="stat-value">{stepVariation.toFixed(1)}%</div>
-                                <div className="stat-desc text-sm">force irregularity</div>
+                                <div className="stat-desc text-sm">irregularity</div>
                             </div>
                         </div>
                     </div>
