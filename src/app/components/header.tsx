@@ -3,15 +3,35 @@
 import React, { useEffect, useState } from "react";
 
 const Header = () => {
-  
-  const storedIsDark = localStorage.getItem('isdark');
-  const initialIsDark = storedIsDark ? JSON.parse(storedIsDark) : false;
 
-  const [isdark, setIsdark] = useState<boolean>(initialIsDark);
+  const [isLocalStorageAvailable, setIsLocalStorageAvailable] = useState<boolean>(false);
+  const [isdark, setIsdark] = useState<boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
 
   useEffect(() => {
-    localStorage.setItem('isdark', JSON.stringify(isdark));
-  }, [isdark]);
+    setIsLocalStorageAvailable(typeof window !== 'undefined' && window.localStorage !== undefined);
+
+    const storedValue = localStorage.getItem('isdark');
+    if (isLocalStorageAvailable && storedValue !== null) {
+      setIsdark(JSON.parse(storedValue));
+    }
+
+    setInitialized(true);
+  }, [isLocalStorageAvailable]);
+
+  useEffect(() => {
+    if (initialized && isLocalStorageAvailable) {
+      localStorage.setItem('isdark', JSON.stringify(isdark));
+    }
+  }, [initialized, isLocalStorageAvailable, isdark]);
+
+  const handleCheckboxChange = () => {
+    setIsdark(!isdark);
+  };
+
+  if (!initialized) {
+    return null; // Render nothing until initialization is complete
+  }
 
   return (
     <header className="navbar bg-base-300 text-base-content">
@@ -19,7 +39,7 @@ const Header = () => {
         <a href="/" className="btn btn-ghost text-xl">Smart<span className="text-info">Tracker</span></a>
       </div>
       <div className="flex-none gap-2">
-        <input type="checkbox" value="dark" checked={isdark} onChange={() => setIsdark(!isdark)} className="toggle theme-controller bg-amber-300 border-sky-400 [--tglbg:theme(colors.sky.500)] checked:bg-blue-300 checked:border-blue-800 checked:[--tglbg:theme(colors.blue.900)] row-start-1 col-start-1 col-span-2"/>
+        <input type="checkbox" value="dark" checked={isdark} onChange={() => handleCheckboxChange()} className="toggle theme-controller bg-amber-300 border-sky-400 [--tglbg:theme(colors.sky.500)] checked:bg-blue-300 checked:border-blue-800 checked:[--tglbg:theme(colors.blue.900)] row-start-1 col-start-1 col-span-2"/>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full">
