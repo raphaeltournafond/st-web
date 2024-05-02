@@ -51,7 +51,6 @@ const UserTable: React.FC = () => {
             <table className="table">
                 <thead>
                 <tr>
-                    <th></th>
                     <th>Name</th>
                     <th>Email</th>
                     <th>See sessions</th>
@@ -60,7 +59,6 @@ const UserTable: React.FC = () => {
                 <tbody>
                 {filteredUserData.map((user, index) => (
                     <tr key={index} className="hover">
-                        <th>{index + 1}</th>
                         <td>{user.firstName} {user.lastName}</td>
                         <td>{user.email}</td>
                         <td><button className="btn btn-primary" onClick={e => handleWatchSessions(user.id.toString())}>Watch Sessions</button></td>
