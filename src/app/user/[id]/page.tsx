@@ -51,8 +51,8 @@ export default function Page({ params }: { params: { id: string } }) {
                     <div className='p-6 flex flex-wrap justify-center'>
                         {sessionData.slice().reverse().map(session => (
                             <div key={session.id} className="card bg-base-100 shadow-xl m-6">
-                                <figure>
-                                    <DataViewer data={sessionDataToDataLines(reduceDataToSize(session.data, 100))} width={300} height={200} />
+                                <figure className="shadow-md">
+                                    <DataViewer data={sessionDataToDataLines(reduceDataToSize(session.data, 100))} width={300} height={200} showAxes={false} />
                                 </figure>
                                 <div className="card-body">
                                 <h2 className="card-title">{formatDate(Number(session.startDate))}</h2>

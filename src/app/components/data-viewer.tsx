@@ -11,9 +11,10 @@ interface ChartProps {
     data: DataLine[];
     width: number;
     height: number;
+    showAxes?: boolean;
 }
 
-const DataViewer: React.FC<ChartProps> = ({ data, width, height }) => {
+const DataViewer: React.FC<ChartProps> = ({ data, width, height, showAxes = true }) => {
     const svgRef = useRef<SVGSVGElement>(null);
 
     useEffect(() => {
@@ -53,12 +54,14 @@ const DataViewer: React.FC<ChartProps> = ({ data, width, height }) => {
         const g = svg.append('g')
             .attr('transform', `translate(${margin.left},${margin.top})`);
 
-        g.append('g')
+        if (showAxes) {
+            g.append('g')
             .attr('transform', `translate(0, ${innerHeight})`)
             .call(d3.axisBottom(xScale));
 
-        g.append('g')
-            .call(d3.axisLeft(yScale));
+            g.append('g')
+                .call(d3.axisLeft(yScale));
+        }
 
         data.forEach((lineData) => {
             g.append('path')
@@ -75,7 +78,7 @@ const DataViewer: React.FC<ChartProps> = ({ data, width, height }) => {
                 .text(lineData.label.toUpperCase());
         });
 
-    }, [data, width, height]);
+    }, [data, width, height, showAxes]);
 
     return (
         <svg ref={svgRef} width={width} height={height}></svg>
