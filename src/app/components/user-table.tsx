@@ -40,7 +40,7 @@ const UserTable: React.FC = () => {
     };
 
     return (
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto rounded-md">
             <div className="form-control">
                 <input 
                     type="text" 
@@ -63,7 +63,7 @@ const UserTable: React.FC = () => {
                     <tr key={index} className="hover">
                         <td>{user.firstName} {user.lastName}</td>
                         <td>{user.email}</td>
-                        <td><button className="btn btn-primary" onClick={e => handleWatchSessions(user.id.toString())}>Watch Sessions</button></td>
+                        <td><button className="btn bg-base-300 text-base-content" onClick={e => handleWatchSessions(user.id.toString())}>Watch Sessions</button></td>
                     </tr>
                 ))}
                 </tbody>

@@ -63,7 +63,7 @@ export default function Page({ params }: { params: { id: string } }) {
                                         <h2 className="card-title">{formatDate(Number(session.startDate))}</h2>
                                         <p>Duration: {formatDuration(Number(session.endDate) - Number(session.startDate))}</p>
                                         <div className="card-actions justify-end">
-                                            <button className="btn btn-primary" onClick={e => handleWatchSession(session.id.toString())}>Analyse</button>
+                                            <button className="btn bg-base-300 text-base-content" onClick={e => handleWatchSession(session.id.toString())}>Analyse</button>
                                         </div>
                                     </div>
                                 </div>
