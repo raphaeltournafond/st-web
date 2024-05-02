@@ -283,7 +283,7 @@ function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequ
 
     const stepFrequency = totalStepTimeDifference / (stepCount - 1) * samplingFrequency; // exclude the first step, in seconds
 
-    const stepRegularity = calculateStepRegularity(stepTimeDifferences);
+    const stepRegularity = (1 - (stepFrequency - calculateStepRegularity(stepTimeDifferences)) / stepFrequency) * 100;
 
     return { stepCount, stepFrequency, stepRegularity };
 }

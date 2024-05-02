@@ -110,7 +110,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="stat-title text-lg">Deviation</div>
-                                <div className="stat-value">{stepRegularity.toFixed(2)}s</div>
+                                <div className="stat-value">{stepRegularity.toFixed(2)}%</div>
                                 <div className="stat-desc text-sm">average irregularity</div>
                             </div>
                         </div>
