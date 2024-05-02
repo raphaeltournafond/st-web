@@ -257,12 +257,14 @@ function extractPeaks(data: AccelerometerData[]): number[] {
     return peaksIndices;
 }
 
-function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequency: number; stepRegularity: number } {
+function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequency: number; stepRegularity: number; averageMagnitudeVariation: number } {
     let stepCount = 0;
     let passedMaximum = false;
     let previousStepTime = 0;
+    let previousStepMagnitude = 0;
     let totalStepTimeDifference = 0;
     const stepTimeDifferences: number[] = [];
+    const magnitudeVariationsPercentage: number[] = [];
 
     for (let i = 1; i < magnitudes.length - 1; i++) {
         if (magnitudes[i] > magnitudes[i - 1] && magnitudes[i] > magnitudes[i + 1]) {
@@ -276,7 +278,12 @@ function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequ
                 totalStepTimeDifference += stepTimeDifference; // Calculate time difference between consecutive steps
                 stepTimeDifferences.push(stepTimeDifference);
             }
+            if (stepCount > 1) {
+                const magnitudeVariationPercentage = Math.abs((magnitudes[i - 1] - previousStepMagnitude) / previousStepMagnitude) * 100;
+                magnitudeVariationsPercentage.push(magnitudeVariationPercentage);
+            }
             previousStepTime = currentStepTime;
+            previousStepMagnitude = magnitudes[i - 1];
             passedMaximum = false;
         }
     }
@@ -285,7 +292,9 @@ function extractStepsStats(magnitudes: number[]): { stepCount: number; stepFrequ
 
     const stepRegularity = (1 - (stepFrequency - calculateStepRegularity(stepTimeDifferences)) / stepFrequency) * 100;
 
-    return { stepCount, stepFrequency, stepRegularity };
+    const averageMagnitudeVariation = magnitudeVariationsPercentage.reduce((acc, curr) => acc + curr, 0) / magnitudeVariationsPercentage.length;
+
+    return { stepCount, stepFrequency, stepRegularity, averageMagnitudeVariation };
 }
 
 function calculateStepRegularity(stepTimeDifferences: number[]): number {

@@ -12,6 +12,7 @@ export default function Page({ params }: { params: { id: string } }) {
     const [stepCount, setStepCount] = useState<number>(0);
     const [stepFrequency, setStepFrequency] = useState<number>(0);
     const [stepRegularity, setStepRegularity] = useState<number>(0);
+    const [stepVariation, setStepVariation] = useState<number>(0);
 
     const length = useRef<number>(1000);
 
@@ -54,10 +55,11 @@ export default function Page({ params }: { params: { id: string } }) {
 
             const peaks = extractPeaks(session.data)
             length.current = peaks.length * 10;
-            const { stepCount, stepFrequency, stepRegularity } = extractStepsStats(peaks);
+            const { stepCount, stepFrequency, stepRegularity, averageMagnitudeVariation } = extractStepsStats(peaks);
             setStepCount(stepCount);
             setStepFrequency(stepFrequency);
             setStepRegularity(stepRegularity);
+            setStepVariation(averageMagnitudeVariation);
 
             dataLines.current.push({
                 data: peaks,
@@ -75,7 +77,7 @@ export default function Page({ params }: { params: { id: string } }) {
                     <DataViewer data={dataLines.current} width={length.current} height={600} />
                 </div>
                 <div className="flex justify-center">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="stat shadow bg-base-100 rounded-lg p-4 flex items-center">
                             <div className="stat-figure mr-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 640 512" className="inline-block w-8 h-8 stroke-current fill-info">
@@ -110,8 +112,21 @@ export default function Page({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="stat-title text-lg">Deviation</div>
-                                <div className="stat-value">{stepRegularity.toFixed(2)}%</div>
+                                <div className="stat-value">{stepRegularity.toFixed(1)}%</div>
                                 <div className="stat-desc text-sm">average irregularity</div>
+                            </div>
+                        </div>
+
+                        <div className="stat shadow bg-base-100 rounded-lg p-4 flex items-center">
+                            <div className="stat-figure mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 640 512" className="inline-block w-8 h-8 stroke-current fill-info">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M128 176a128 128 0 1 1 256 0 128 128 0 1 1 -256 0zM391.8 64C359.5 24.9 310.7 0 256 0S152.5 24.9 120.2 64H64C28.7 64 0 92.7 0 128V448c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64H391.8zM296 224c0-10.6-4.1-20.2-10.9-27.4l33.6-78.3c3.5-8.1-.3-17.5-8.4-21s-17.5 .3-21 8.4L255.7 184c-22 .1-39.7 18-39.7 40c0 22.1 17.9 40 40 40s40-17.9 40-40z" />
+                                </svg>
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="stat-title text-lg">Variation</div>
+                                <div className="stat-value">{stepVariation.toFixed(1)}%</div>
+                                <div className="stat-desc text-sm">force irregularity</div>
                             </div>
                         </div>
                     </div>
