@@ -68,7 +68,7 @@ export default function Page({ params }: { params: { id: string } }) {
     }, [session, dataLines]);
 
     return (
-        <main className='bg-base-200 min-h-screen flex items-center justify-center'>
+        <main className='bg-base-200 min-h-screen flex items-center justify-center text-base-content'>
             <div className="container mx-auto p-4">
                 <h1 className="text-3xl font-bold text-center mb-8">Session analysis</h1>
                 <div className="bg-base-100 rounded-lg shadow-lg m-6 overflow-x-auto">
