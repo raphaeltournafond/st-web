@@ -2,7 +2,7 @@ import React from "react";
 
 const Header = () => {
   return (
-    <header className="navbar bg-base-100">
+    <header className="navbar bg-base-300">
       <div className="flex-1">
         <a href="/" className="btn btn-ghost text-xl">SmartTracker</a>
       </div>
