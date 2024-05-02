@@ -34,7 +34,6 @@ const UserTable: React.FC = () => {
     const router = useRouter();
 
     const handleWatchSessions = (userId: string) => {
-    // Navigate to the user page with the user ID
     router.push(`/user/${userId}`);
     };
 
@@ -44,13 +43,12 @@ const UserTable: React.FC = () => {
                 <input 
                     type="text" 
                     placeholder="Athlete search"
-                    className="input input-bordered w-24 md:w-auto"
+                    className="input input-bordered w-auto"
                     value={searchQuery}
                     onChange={e => setSearchQuery(e.target.value)}
                 />
             </div>
             <table className="table">
-                {/* head */}
                 <thead>
                 <tr>
                     <th></th>
