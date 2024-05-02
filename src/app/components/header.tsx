@@ -16,7 +16,7 @@ const Header = () => {
   return (
     <header className="navbar bg-base-300 text-base-content">
       <div className="flex-1">
-        <a href="/" className="btn btn-ghost text-xl">Smart <span className="text-info">Tracker</span></a>
+        <a href="/" className="btn btn-ghost text-xl">Smart<span className="text-info">Tracker</span></a>
       </div>
       <div className="flex-none gap-2">
         <input type="checkbox" value="dark" checked={isdark} onChange={() => setIsdark(!isdark)} className="toggle theme-controller bg-amber-300 border-sky-400 [--tglbg:theme(colors.sky.500)] checked:bg-blue-300 checked:border-blue-800 checked:[--tglbg:theme(colors.blue.900)] row-start-1 col-start-1 col-span-2"/>

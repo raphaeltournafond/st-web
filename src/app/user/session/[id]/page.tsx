@@ -100,7 +100,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="stat-title text-lg">Duration</div>
                                 <div className="stat-value">{stepFrequency.toFixed(2)}s</div>
-                                <div className="stat-desc text-sm">between steps</div>
+                                <div className="stat-desc text-sm">step length</div>
                             </div>
                         </div>
 
@@ -113,7 +113,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             <div className="flex flex-col">
                                 <div className="stat-title text-lg">Rythm</div>
                                 <div className="stat-value">{stepRegularity.toFixed(1)}%</div>
-                                <div className="stat-desc text-sm">average deviation</div>
+                                <div className="stat-desc text-sm">deviation</div>
                             </div>
                         </div>
 
