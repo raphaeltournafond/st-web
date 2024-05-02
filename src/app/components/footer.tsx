@@ -3,7 +3,7 @@ import React from "react";
 
 const Footer = () => {
     return (
-        <footer className="footer footer-center p-10 bg-neutral text-neutral-content">
+        <footer className="footer footer-center p-10 bg-base-300">
             <aside>
                 <Image src={"/logo-aq-tech.png"} width={150} height={150} alt="Logo AQTech" />
                 <p className="font-bold">Agence d&apos;ingénierie <span className="text-primary">multidisciplinaire</span>.</p>
