@@ -40,6 +40,7 @@ const Header = () => {
       </div>
       <div className="flex-none gap-2">
         <input type="checkbox" value="dark" checked={isdark} onChange={() => handleCheckboxChange()} className="toggle theme-controller bg-amber-300 border-amber-200 [--tglbg:theme(colors.gray.100)] checked:bg-blue-300 checked:border-blue-300 checked:[--tglbg:theme(colors.blue.900)] row-start-1 col-start-1 col-span-2"/>
+        <input type="checkbox" value="light" checked={!isdark} className="invisible theme-controller"/>
         <div className="dropdown dropdown-end">
           <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
             <div className="w-10 rounded-full fill-base-100">
