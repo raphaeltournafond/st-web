@@ -1,81 +1,83 @@
-'use client'
-
-import React, { useEffect, useState, useRef } from 'react';
-import { checkBackend, fetchSession } from '@/app/lib/api';
+import React from 'react';
+import { fetchSession } from '@/app/lib/api';
 import { Session, exportSessionData } from '@/app/types/session';
-import { jsonToSession } from '@/app/lib/utils';
+import { formatDate, jsonToSession } from '@/app/lib/utils';
 import DataViewer, { DataLine } from '@/app/components/data-viewer';
 import { extractStepsStats, extractPeaks, normalizeData } from '@/app/lib/processor';
 
-export default function Page({ params }: { params: { id: string } }) {
-    const [session, setSession] = useState<Session>();
-    const [stepCount, setStepCount] = useState<number>(0);
-    const [stepFrequency, setStepFrequency] = useState<number>(0);
-    const [stepRegularity, setStepRegularity] = useState<number>(0);
-    const [stepVariation, setStepVariation] = useState<number>(0);
+interface Props {
+    session: Session | undefined;
+    error: string | undefined;
+}
 
-    const length = useRef<number>(1000);
-
-    let dataLines = useRef<DataLine[]>([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                await checkBackend();
-                const sessionJsonData = await fetchSession(params.id)
-                setSession(jsonToSession(sessionJsonData))
-            } catch (error: any) {
-                console.error('Error fetching data:', error.message);
-            }
+function getProps(id: string): Props {
+    try {
+        const jsonData = fetchSession(id);
+        const session: Session = jsonToSession(jsonData);
+        return {
+            session: session,
+            error: undefined,
         };
-        fetchData();
-    }, [params.id]);
+    } catch (error: any) {
+        console.error(error.message);
+        return {
+            session: undefined,
+            error: `Error fetching data: ${error.message}`,
+        };
+    }
+}
 
-    useEffect(() => {
-        if (session) {
-            const [xValues, yValues, zValues] = exportSessionData(normalizeData(session.data));
+export default function Page({ params }: { params: { id: string } }) {
+    let stepCountValue = 0;
+    let stepFrequencyValue = 0;
+    let stepRegularityValue = 0;
+    let stepVariationValue = 0;
 
-            dataLines.current.push({
-                data: xValues,
-                color: 'gray',
-                label: 'X'
-            });
+    let length = 1000;
 
-            dataLines.current.push({
-                data: yValues,
-                color: 'gray',
-                label: 'Y'
-            });
+    let dataLines: DataLine[] = [];
 
-            dataLines.current.push({
-                data: zValues,
-                color: 'gray',
-                label: 'Z'
-            });
+    const props = getProps(params.id);
 
-            const peaks = extractPeaks(session.data)
-            length.current = peaks.length * 10;
-            const { stepCount, stepFrequency, stepRegularity, averageMagnitudeVariation } = extractStepsStats(peaks);
-            setStepCount(stepCount);
-            setStepFrequency(stepFrequency);
-            setStepRegularity(stepRegularity);
-            setStepVariation(averageMagnitudeVariation);
+    if (props.session) {
+        const [xValues, yValues, zValues] = exportSessionData(normalizeData(props.session.data));
 
-            dataLines.current.push({
-                data: peaks,
-                color: '#00B2FF',
-                label: 'Steps',
-            });
-        }
-    }, [session, dataLines]);
+        dataLines.push({
+            data: xValues,
+            color: 'gray',
+            label: 'X'
+        });
+
+        dataLines.push({
+            data: yValues,
+            color: 'gray',
+            label: 'Y'
+        });
+
+        dataLines.push({
+            data: zValues,
+            color: 'gray',
+            label: 'Z'
+        });
+
+        const peaks = extractPeaks(props.session.data)
+        length = peaks.length * 10;
+        const { stepCount, stepFrequency, stepRegularity, averageMagnitudeVariation } = extractStepsStats(peaks);
+        stepCountValue = stepCount;
+        stepFrequencyValue = stepFrequency;
+        stepRegularityValue = stepRegularity;
+        stepVariationValue = averageMagnitudeVariation;
+
+        dataLines.push({
+            data: peaks,
+            color: '#00B2FF',
+            label: 'Steps',
+        });
+    }
 
     return (
         <main className='bg-base-200 min-h-screen flex items-center justify-center text-base-content'>
             <div className="container mx-auto p-4">
-                <h1 className="text-3xl font-bold text-center mb-8">Session analysis</h1>
-                <div className="bg-base-100 rounded-lg shadow-lg m-6 overflow-x-auto">
-                    <DataViewer data={dataLines.current} width={length.current} height={600} />
-                </div>
                 <div className="flex justify-center">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="stat shadow bg-base-100 rounded-lg p-4 flex items-center">
@@ -86,7 +88,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="stat-title text-lg">Steps</div>
-                                <div className="stat-value">{stepCount}</div>
+                                <div className="stat-value">{stepCountValue}</div>
                                 <div className="stat-desc text-sm">total count</div>
                             </div>
                         </div>
@@ -99,7 +101,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="stat-title text-lg">Duration</div>
-                                <div className="stat-value">{stepFrequency.toFixed(2)}s</div>
+                                <div className="stat-value">{stepFrequencyValue.toFixed(2)}s</div>
                                 <div className="stat-desc text-sm">step length</div>
                             </div>
                         </div>
@@ -112,7 +114,7 @@ export default function Page({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="stat-title text-lg">Rythm</div>
-                                <div className="stat-value">{stepRegularity.toFixed(1)}%</div>
+                                <div className="stat-value">{stepRegularityValue.toFixed(1)}%</div>
                                 <div className="stat-desc text-sm">deviation</div>
                             </div>
                         </div>
@@ -125,12 +127,16 @@ export default function Page({ params }: { params: { id: string } }) {
                             </div>
                             <div className="flex flex-col">
                                 <div className="stat-title text-lg">Force</div>
-                                <div className="stat-value">{stepVariation.toFixed(1)}%</div>
+                                <div className="stat-value">{stepVariationValue.toFixed(1)}%</div>
                                 <div className="stat-desc text-sm">irregularity</div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div className="bg-base-100 rounded-lg shadow-lg m-6 overflow-x-auto">
+                    <DataViewer data={dataLines} width={length} height={600} />
+                </div>
+                <p>{formatDate(Number(props.session?.startDate))}</p>
             </div>
         </main>
 
