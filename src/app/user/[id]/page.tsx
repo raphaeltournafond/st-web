@@ -1,5 +1,5 @@
 import React from 'react';
-import { fetchUserDetails, fetchSessionList } from '@/app/lib/api';
+import { fetchUserDetails, fetchSessionList, fetchUserList } from '@/app/lib/api';
 import { formatDate, formatDuration, jsonToSession, jsonToUser } from '@/app/lib/utils';
 import { User } from '@/app/types/user';
 import { Session, sessionDataToDataLines } from '@/app/types/session';
@@ -10,6 +10,15 @@ interface Props {
     userData: User | undefined;
     sessionData: Session[] | undefined;
     error: string | undefined;
+}
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+    const users: User[] = fetchUserList().map(jsonToUser)
+    return users.map((user) => ({
+        id: user.id,
+    }))
 }
 
 function getProps(id: string): Props {
@@ -34,8 +43,8 @@ function getProps(id: string): Props {
 }
 
 export default function Page({ params }: { params: { id: string } }) {
-    const props = getProps(params.id);
-    console.log(props);
+    const { id } = params
+    const props = getProps(id);
     const userData = props.userData;
     const sessionData = props.sessionData;
 
