@@ -35,10 +35,11 @@ const Header = () => {
 
   return (
     <header className="navbar bg-base-300 text-base-content">
-      <div className="flex-1">
-        <a href="/" className="btn btn-ghost text-xl">Smart<span className="text-info">Tracker</span></a>
+      <div className="navbar-start">
+        <a href="/" className="btn btn-ghost text-xl lg:text-3xl">Smart<span className="text-info">Tracker</span></a>
+        <p className="text-xs mt-4">by Alpine<span className="text-info">Tech</span></p>
       </div>
-      <div className="flex-none gap-2">
+      <div className="navbar-end flex-none lg:gap-2">
         <input type="checkbox" value="dark" checked={isdark} onChange={() => handleCheckboxChange()} className="toggle theme-controller bg-amber-300 border-amber-200 [--tglbg:theme(colors.gray.100)] checked:bg-blue-300 checked:border-blue-300 checked:[--tglbg:theme(colors.blue.900)] row-start-1 col-start-1 col-span-2"/>
         <input type="checkbox" value="light" checked={!isdark} className="invisible theme-controller"/>
         <div className="dropdown dropdown-end">
