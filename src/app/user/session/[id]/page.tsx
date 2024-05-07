@@ -1,13 +1,24 @@
 import React from 'react';
-import { fetchSession } from '@/app/lib/api';
+import { fetchSession, fetchSessionList, fetchUserList } from '@/app/lib/api';
 import { Session, exportSessionData } from '@/app/types/session';
-import { formatDate, jsonToSession } from '@/app/lib/utils';
+import { formatDate, jsonToSession, jsonToUser } from '@/app/lib/utils';
 import DataViewer, { DataLine } from '@/app/components/data-viewer';
 import { extractStepsStats, extractPeaks, normalizeData } from '@/app/lib/processor';
+import { User } from '@/app/types/user';
 
 interface Props {
     session: Session | undefined;
     error: string | undefined;
+}
+
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+    const users: User[] = fetchUserList().map(jsonToUser)
+    const sessions: Session[] = users.map((user) => fetchSessionList(user.id.toString()).map(jsonToSession))[0]
+    return sessions.map((session) => ({
+        id: session.id,
+    }))
 }
 
 function getProps(id: string): Props {
@@ -36,8 +47,8 @@ export default function Page({ params }: { params: { id: string } }) {
     let length = 1000;
 
     let dataLines: DataLine[] = [];
-
-    const props = getProps(params.id);
+    const { id } = params;
+    const props = getProps(id);
 
     if (props.session) {
         const [xValues, yValues, zValues] = exportSessionData(normalizeData(props.session.data));
@@ -76,11 +87,11 @@ export default function Page({ params }: { params: { id: string } }) {
     }
 
     return (
-        <main className='bg-base-200 min-h-screen flex items-center justify-center text-base-content'>
-            <div className="container mx-auto p-4">
+        <main className='bg-base-200 min-h-screen flex justify-center text-base-content'>
+            <div className="container mt-2 mx-auto p-4">
                 <div className="flex justify-center">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div className="stat shadow bg-base-100 rounded-lg p-4 flex items-center">
+                        <div className="stat shadow bg-base-100 rounded-lg p- flex items-center">
                             <div className="stat-figure mr-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 640 512" className="inline-block w-8 h-8 stroke-current fill-info">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M416 0C352.3 0 256 32 256 32V160c48 0 76 16 104 32s56 32 104 32c56.4 0 176-16 176-96S512 0 416 0zM128 96c0 35.3 28.7 64 64 64h32V32H192c-35.3 0-64 28.7-64 64zM288 512c96 0 224-48 224-128s-119.6-96-176-96c-48 0-76 16-104 32s-56 32-104 32V480s96.3 32 160 32zM0 416c0 35.3 28.7 64 64 64H96V352H64c-35.3 0-64 28.7-64 64z" />

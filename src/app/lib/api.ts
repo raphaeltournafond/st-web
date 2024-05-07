@@ -4,7 +4,7 @@ import path from 'path';
 const usersPath = path.join(process.cwd(), 'public/demo-data', 'users.json');
 const sessionsPath = path.join(process.cwd(), 'public/demo-data', 'sessions.json');
 
-function fetchUserList() {
+function fetchUserList(): [] {
     try {
         const data = fs.readFileSync(usersPath, 'utf8');
         return JSON.parse(data);
