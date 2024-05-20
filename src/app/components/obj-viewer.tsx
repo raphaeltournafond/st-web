@@ -24,8 +24,6 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) =
 
     const init = () => {
       camera = new THREE.PerspectiveCamera(45, 1, 0.1, 20);
-      camera.position.x = 1;
-      camera.position.y = -1;
 
       scene = new THREE.Scene();
 
@@ -54,7 +52,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) =
           objLoader.load(
             objUrl,
             (object: THREE.Object3D) => {
-              object.scale.setScalar(0.01);
+              object.scale.setScalar(0.015);
               scene.add(object);
             },
             onProgress,
@@ -74,6 +72,10 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) =
       }
 
       controls = new OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.3;
+      controls.autoRotate = true;
+      controls.autoRotateSpeed = 2.0;
       controls.minDistance = 0.5;
       controls.maxDistance = 0.5;
 
@@ -95,6 +97,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) =
       if (renderer && scene && camera) {
         renderer.render(scene, camera);
       }
+      controls.update();
     };
 
     init();
