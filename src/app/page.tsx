@@ -5,9 +5,9 @@ import Image from 'next/image';
 
 export default function Home() {
   return (
-    <main className="bg-base-100 text-base-content flex flex-col justify-center text-center lg:text-left p-10">
+    <main className="bg-base-100 text-base-content flex flex-col justify-center text-center lg:text-left">
 
-      <section className="py-10">
+      <section className="p-10">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center">
           <div>
             <h1 className="text-4xl font-bold mb-4">Smarter Moves, Smoother Tracks:<br />Elevate Your Training Game 🚀</h1>
@@ -39,7 +39,7 @@ export default function Home() {
       </section>
 
       <section className="py-10">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center">
+        <div className="container mx-0 md:mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div>
             <h2 className="text-3xl font-bold mb-4">Our Mobile Application</h2>
             <p className="text-lg text-gray-600 mb-8">
