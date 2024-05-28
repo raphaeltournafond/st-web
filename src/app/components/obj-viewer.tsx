@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
@@ -15,22 +15,34 @@ interface OBJViewerProps {
 
 const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) => {
   const mountRef = useRef<HTMLDivElement>(null);
+  const hasInitialized = useRef(false);
 
   useEffect(() => {
+
+    if (typeof window === 'undefined' || hasInitialized.current) return;
+    hasInitialized.current = true;
+
     let camera: THREE.PerspectiveCamera;
     let scene: THREE.Scene;
     let renderer: THREE.WebGLRenderer;
     let controls: OrbitControls;
+    let object: THREE.Object3D | null = null;
+    let scaleFactor: number = 1.4
+    const startWidth = window.innerWidth;
+    const startHeight = window.innerHeight;
 
     const init = () => {
-      camera = new THREE.PerspectiveCamera(45, 1, 0.1, 20);
+      camera = new THREE.PerspectiveCamera(45, width/height, 0.1, 20);
+      camera.position.set(0, 2, 1);
+      camera.up.set(0, 0, 1);
+      camera.lookAt(0, 0, 0);
 
       scene = new THREE.Scene();
 
       const ambientLight = new THREE.AmbientLight(0xffffff);
       scene.add(ambientLight);
 
-      const pointLight = new THREE.PointLight(0xffffff, 1);
+      const pointLight = new THREE.PointLight(0xffd6cc, 1);
       camera.add(pointLight);
       scene.add(camera);
 
@@ -51,8 +63,9 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) =
           objLoader.setMaterials(materials);
           objLoader.load(
             objUrl,
-            (object: THREE.Object3D) => {
-              object.scale.setScalar(0.015);
+            (loadedObject: THREE.Object3D) => {
+              object = loadedObject;
+              object.scale.setScalar(scaleFactor / 100);
               scene.add(object);
             },
             onProgress,
@@ -74,7 +87,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) =
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
       controls.dampingFactor = 0.3;
-      controls.autoRotate = true;
+      controls.autoRotate = false;
       controls.autoRotateSpeed = 2.0;
       controls.minDistance = 0.5;
       controls.maxDistance = 0.5;
@@ -83,19 +96,19 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) =
     };
 
     const onWindowResize = () => {
-      if (!camera) return;
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-
-      if (renderer) {
-        renderer.setSize(width, height);
-      }
+      if (!camera || !renderer) return;
+      
+      const newWidth = window.innerWidth;
+      const newHeight = window.innerHeight;
+      const scale = Math.min(newWidth / startWidth, newHeight / startHeight);
+      renderer.setSize(width * scale, height * scale);
     };
 
     const animate = () => {
       requestAnimationFrame(animate);
-      if (renderer && scene && camera) {
+      if (renderer && scene && camera && object) {
         renderer.render(scene, camera);
+        object.rotation.z += 0.01;
       }
       controls.update();
     };
