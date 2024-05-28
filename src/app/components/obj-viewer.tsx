@@ -96,12 +96,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height}) =
     };
 
     const onWindowResize = () => {
-      if (!camera || !renderer) return;
-      
-      const newWidth = window.innerWidth;
-      const newHeight = window.innerHeight;
-      const scale = Math.min(newWidth / startWidth, newHeight / startHeight);
-      renderer.setSize(width * scale, height * scale);
+
     };
 
     const animate = () => {
