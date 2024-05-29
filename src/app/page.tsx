@@ -1,6 +1,7 @@
 import React from 'react';
 import OBJViewer from './components/obj-viewer';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Home() {
   return (
@@ -50,7 +51,9 @@ export default function Home() {
           <div className="mockup-phone">
             <div className="camera"></div>
             <div className="display">
-              <div className="artboard artboard-demo phone-1">Hi.</div>
+              <div className="artboard artboard-demo phone-1 my-12">
+                <Image src={'/app.gif'} alt='App demo video' width={888} height={1836} unoptimized />
+              </div>
             </div>
           </div>
         </div>
