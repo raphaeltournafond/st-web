@@ -6,7 +6,6 @@ import Image from 'next/image';
 export default function Home() {
   return (
     <main className="bg-base-100 text-base-content flex flex-col justify-center text-center lg:text-left">
-
       <section className="py-10">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center">
           <div className='px-4'>
@@ -25,7 +24,7 @@ export default function Home() {
       <section className="py-10">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center">
           <div>
-            <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={500} height={500} />
+            <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={400} height={500} />
           </div>
           <div className='px-4'>
             <h1 className="text-2xl md:text-4xl font-bold mb-4">Our Embedded Devices</h1>
