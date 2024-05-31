@@ -15,8 +15,11 @@ export default function Home() {
             </p>
             <Link href="/search"><button className="btn btn-info">Get Started</button></Link>
           </div>
-          <div className="md:mockup-window md:border">
+          <div className="hidden md:inline mockup-window border">
             <div className='py-40 screen-dark screen-light bg-cover'></div>
+          </div>
+          <div className="md:hidden">
+            <Image src={'/screen-dark.png'} alt='screen' width={500} height={500}/>
           </div>
         </div>
       </section>
@@ -24,7 +27,7 @@ export default function Home() {
       <section className="py-10">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center">
           <div>
-            <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={400} height={500} />
+            <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={500} height={500} />
           </div>
           <div className='px-4'>
             <h1 className="text-2xl md:text-4xl font-bold mb-4">Our Embedded Devices</h1>

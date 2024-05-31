@@ -12,10 +12,6 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-        'screen-light':
-          "url('/screen-light.png')",
-        'screen-dark':
-          "url('/screen-dark.png')",
       }),
       animation: {
         spin: 'spin 1s linear infinite',
