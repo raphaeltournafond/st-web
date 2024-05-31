@@ -74,11 +74,17 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
               setIsLoading(false);
             },
             onProgress,
-            () => { }
+            () => {
+              setIsLoading(false);
+            }
           );
         },
-        () => { },
-        () => { }
+        () => {
+          setIsLoading(false);
+        },
+        () => {
+          setIsLoading(false);
+        }
       );
 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Set alpha to true for transparency
