@@ -90,7 +90,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <main className='bg-base-200 min-h-screen flex justify-center text-base-content'>
             <div className="container mt-2 mx-auto p-4">
                 <div className="flex justify-center">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                         <div className="stat shadow bg-base-100 rounded-lg p- flex items-center">
                             <div className="stat-figure mr-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 640 512" className="inline-block w-8 h-8 stroke-current fill-info">
@@ -140,6 +140,20 @@ export default function Page({ params }: { params: { id: string } }) {
                                 <div className="stat-title text-lg">Force</div>
                                 <div className="stat-value">{stepVariationValue.toFixed(1)}%</div>
                                 <div className="stat-desc text-sm">irregularity</div>
+                            </div>
+                        </div>
+
+                        <div className="stat shadow bg-base-100 rounded-lg p-4 flex items-center indicator">
+                            <span className="indicator-item badge badge-accent">coming soon</span> 
+                            <div className="stat-figure mr-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="30" width="30" viewBox="0 0 640 512" className="inline-block w-8 h-8 stroke-current fill-info">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M384 32H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H398.4c-5.2 25.8-22.9 47.1-46.4 57.3V448H512c17.7 0 32 14.3 32 32s-14.3 32-32 32H320 128c-17.7 0-32-14.3-32-32s14.3-32 32-32H288V153.3c-23.5-10.3-41.2-31.6-46.4-57.3H128c-17.7 0-32-14.3-32-32s14.3-32 32-32H256c14.6-19.4 37.8-32 64-32s49.4 12.6 64 32zm55.6 288H584.4L512 195.8 439.6 320zM512 416c-62.9 0-115.2-34-126-78.9c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C627.2 382 574.9 416 512 416zM126.8 195.8L54.4 320H199.3L126.8 195.8zM.9 337.1c-2.6-11 1-22.3 6.7-32.1l95.2-163.2c5-8.6 14.2-13.8 24.1-13.8s19.1 5.3 24.1 13.8l95.2 163.2c5.7 9.8 9.3 21.1 6.7 32.1C242 382 189.7 416 126.8 416S11.7 382 .9 337.1z" />
+                                </svg>
+                            </div>
+                            <div className="flex flex-col">
+                                <div className="stat-title text-lg">Balance</div>
+                                <div className="stat-value">--%</div>
+                                <div className="stat-desc text-sm">more on LEFT</div>
                             </div>
                         </div>
                     </div>
