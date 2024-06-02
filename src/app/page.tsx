@@ -56,7 +56,7 @@ export default function Home() {
           <div className="mockup-phone">
             <div className="camera"></div>
             <div className="display">
-              <div className="artboard artboard-demo phone-1 my-12">
+              <div className="artboard artboard-demo phone-1 my-14">
                 <Image src={'/app.gif'} alt='App demo video' width={888} height={1836} unoptimized />
               </div>
             </div>
