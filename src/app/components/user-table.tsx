@@ -43,7 +43,7 @@ const UserTable: React.FC = () => {
                     <tr key={index} className="hover">
                         <td>{user.firstName} {user.lastName}</td>
                         <td>{user.email}</td>
-                        <td><a href={`/user/${user.id}`} className="btn bg-base-300 text-base-content">Watch Sessions</a></td>
+                        <td><a href={`/user/${user.id}`} className="btn bg-base-300 text-base-content animate-pulse">Watch Sessions</a></td>
                     </tr>
                 ))}
                 </tbody>

@@ -13,7 +13,7 @@ export default function Home() {
             <p className="text-lg md:text-xl brightness-75 mb-8">
               Choose AlpineTech for intelligent sports tracking.<br /><span className="border-base-content/20 border-b-2">Boost your performance</span> with state-of-the-art technology and tailored insights.
             </p>
-            <Link href="/search"><button className="btn btn-info">Get Started</button></Link>
+            <Link href="/table"><button className="btn btn-info">Get Started</button></Link>
           </div>
           <div className="hidden md:inline mockup-window border">
             <div className='py-40 screen-dark screen-light bg-cover'></div>
