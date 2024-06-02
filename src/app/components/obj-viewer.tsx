@@ -19,6 +19,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
   const [isLoading, setIsLoading] = useState(true);
   const [loadingPercentage, setLoadingPercentage] = useState(0);
   const [viewerDimensions, setViewerDimensions] = useState({width, height});
+  const [isGrabbing, setIsGrabbing] = useState(false);
   const originalAspectRatio = width / height;
 
   useEffect(() => {
@@ -167,8 +168,26 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
 
   }, [originalAspectRatio, viewerDimensions]);
 
+  const handleMouseDown = () => setIsGrabbing(true);
+  const handleMouseUp = () => setIsGrabbing(false);
+
+  useEffect(() => {
+    if (mountRef.current) {
+      const element = mountRef.current;
+      element.addEventListener('mousedown', handleMouseDown);
+      element.addEventListener('mouseup', handleMouseUp);
+      element.addEventListener('mouseleave', handleMouseUp); // to handle the case when mouse leaves the element
+
+      return () => {
+        element.removeEventListener('mousedown', handleMouseDown);
+        element.removeEventListener('mouseup', handleMouseUp);
+        element.removeEventListener('mouseleave', handleMouseUp);
+      };
+    }
+  }, []);
+
   return (
-    <div style={{ position: 'relative', width: viewerDimensions.width, height: viewerDimensions.height }}>
+    <div style={{ position: 'relative', width: viewerDimensions.width, height: viewerDimensions.height }} className={isGrabbing ? 'cursor-grabbing' : 'cursor-grab'}>
       {isLoading &&
         <div>
           <div className="absolute z-20 top-1/2 left-1/2 w-10 h-10 border-4 border-solid border-gray-200 border-t-gray-700 rounded-full animate-spin transform -translate-x-1/2 -translate-y-1/2"></div>
