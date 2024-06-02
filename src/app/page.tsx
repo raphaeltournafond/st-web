@@ -1,9 +1,11 @@
+'use client'
+
 import React from 'react';
 import OBJViewer from './components/obj-viewer';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Home() {
+export default function Home() {  
   return (
     <main className="bg-base-100 text-base-content flex flex-col justify-center text-center lg:text-left">
       <section className="py-10">
@@ -22,7 +24,7 @@ export default function Home() {
             <div className='py-40 screen-dark screen-light bg-cover'></div>
           </div>
           <div className="xl:hidden">
-            <Image className='rounded-lg shadow' src={'/screen-dark.png'} alt='screen' width={1000} height={1000} />
+            <Image className='rounded-lg shadow-lg shadow-black' src={'/screen-light.png'} alt='screen' width={1000} height={1000} />
           </div>
         </div>
       </section>
