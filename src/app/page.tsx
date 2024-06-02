@@ -15,11 +15,14 @@ export default function Home() {
             </p>
             <Link href="/table"><button className="btn btn-info">Get Started</button></Link>
           </div>
-          <div className="hidden xl:inline mockup-window border">
+          <div className="hidden xl:inline mockup-browser border bg-base-300">
+            <div className="mockup-browser-toolbar">
+              <div className="input">https://alpinetech.vercel.app</div>
+            </div>
             <div className='py-40 screen-dark screen-light bg-cover'></div>
           </div>
           <div className="xl:hidden">
-            <Image src={'/screen-dark.png'} alt='screen' width={1000} height={1000}/>
+            <Image className='rounded-lg shadow' src={'/screen-dark.png'} alt='screen' width={1000} height={1000} />
           </div>
         </div>
       </section>
