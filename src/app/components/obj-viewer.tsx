@@ -128,7 +128,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
       requestAnimationFrame(animate);
       if (renderer && scene && camera && object) {
         renderer.render(scene, camera);
-        object.rotation.z += 0.01;
+        object.rotation.z += 0.008;
       }
       controls.update();
     };

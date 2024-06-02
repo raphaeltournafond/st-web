@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <main className="bg-base-100 text-base-content flex flex-col justify-center text-center lg:text-left">
       <section className="py-10">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center">
+        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-center">
           <div className='px-4'>
             <h1 className="text-2xl md:text-4xl font-bold mb-4">Smarter Moves, Smoother Tracks:<br />Elevate Your Training Game 🚀</h1>
             <p className="text-lg md:text-xl brightness-75 mb-8">
@@ -25,11 +25,11 @@ export default function Home() {
       </section>
 
       <section className="py-10">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-center">
-          <div>
-            <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={500} height={500} />
+        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-center">
+          <div className='order-2 lg:order-1'>
+            <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={600} height={600} />
           </div>
-          <div className='px-4'>
+          <div className='order-1 lg:order-2 px-4'>
             <h1 className="text-2xl md:text-4xl font-bold mb-4">Our Embedded Devices</h1>
             <p className="text-lg md:text-xl brightness-75 mb-8">
               We&apos;ve developed cutting-edge embedded devices for tracking sports activity,
@@ -41,7 +41,7 @@ export default function Home() {
       </section>
 
       <section className="py-10">
-        <div className="container mx-0 md:mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           <div className='px-4'>
             <h1 className="text-2xl md:text-4xl font-bold mb-4">Our Mobile Application</h1>
             <p className="text-lg md:text-xl brightness-75 mb-8">
