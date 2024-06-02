@@ -1,9 +1,9 @@
 [
     {
         "id": "2",
-        "username": "demo",
-        "email": "demo@gmail.com",
-        "first_name": "User",
-        "last_name": "Demo"
+        "username": "johndoe",
+        "email": "john.doe@proton.me",
+        "first_name": "John",
+        "last_name": "Doe"
     }
 ]

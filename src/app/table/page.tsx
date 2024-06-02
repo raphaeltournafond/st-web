@@ -7,7 +7,7 @@ export default function Home() {
 
       <section className="pt-20">
         <div className="container mx-auto text-center px-4">
-          <h2 className="text-3xl font-bold mb-4 text-error">Demo Website Notice</h2>
+          <h2 className="text-3xl font-bold mb-4 text-info">Demo Website Notice</h2>
           <p className="text-lg mb-8">
             Welcome to the demo version of our Smart Tracker app. This demo is designed to give you an overview of the powerful capabilities of our embedded tracking devices. Here, you can explore the features using a single demo user account.
           </p>
