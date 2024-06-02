@@ -18,6 +18,25 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
   const hasInitialized = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
   const [loadingPercentage, setLoadingPercentage] = useState(0);
+  const [viewerDimensions, setViewerDimensions] = useState({width, height});
+  const originalAspectRatio = width / height;
+
+  useEffect(() => {
+    const onWindowResize = () => {
+      const newWidth = Math.min(window.innerWidth, width);
+      const newHeight = newWidth / originalAspectRatio;
+      setViewerDimensions({ width: newWidth, height: newHeight });
+    };
+
+    window.addEventListener('resize', onWindowResize);
+    
+    onWindowResize();
+
+    return () => {
+      window.removeEventListener('resize', onWindowResize);
+    };
+
+  }, [width, height, originalAspectRatio]);
 
   useEffect(() => {
 
@@ -32,7 +51,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
     let scaleFactor: number = 1.4
 
     const init = () => {
-      camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 20);
+      camera = new THREE.PerspectiveCamera(45, originalAspectRatio, 0.1, 20);
       camera.position.set(0, 2, 1);
       camera.up.set(0, 0, 1);
       camera.lookAt(0, 0, 0);
@@ -90,7 +109,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
       renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); // Set alpha to true for transparency
       renderer.setClearColor(0x000000, 0);
       renderer.setPixelRatio(window.devicePixelRatio);
-      renderer.setSize(width, height);
+      renderer.setSize(viewerDimensions.width, viewerDimensions.height);
       if (mountRef.current) {
         mountRef.current.appendChild(renderer.domElement);
       }
@@ -102,11 +121,6 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
       controls.autoRotateSpeed = 2.0;
       controls.minDistance = 0.5;
       controls.maxDistance = 0.5;
-
-      window.addEventListener('resize', onWindowResize);
-    };
-
-    const onWindowResize = () => {
 
     };
 
@@ -121,14 +135,40 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
 
     init();
     animate();
+  }, [objUrl, mtlUrl, loadingPercentage, isLoading, viewerDimensions, originalAspectRatio]);
 
-    return () => {
-      window.removeEventListener('resize', onWindowResize);
+  useEffect(() => {
+    if (!hasInitialized.current) return;
+
+    let camera: THREE.PerspectiveCamera | null = null;
+    let renderer: THREE.WebGLRenderer | null = null;
+
+    const updateRenderer = () => {
+      if (renderer && camera) {
+        camera.aspect = viewerDimensions.width / viewerDimensions.height;
+        camera.updateProjectionMatrix();
+        renderer.setSize(viewerDimensions.width, viewerDimensions.height);
+        renderer.setClearColor(0x000000, 0);
+      }
     };
-  }, [objUrl, mtlUrl, width, height, loadingPercentage, isLoading]);
+
+    if (mountRef.current) {
+      const children = mountRef.current.children;
+      for (let i = 0; i < children.length; i++) {
+        if (children[i] instanceof HTMLCanvasElement) {
+          renderer = new THREE.WebGLRenderer({ canvas: children[i] as HTMLCanvasElement });
+        }
+      }
+    }
+
+    camera = new THREE.PerspectiveCamera(45, originalAspectRatio, 0.1, 20);
+
+    updateRenderer();
+
+  }, [originalAspectRatio, viewerDimensions]);
 
   return (
-    <div style={{ position: 'relative', width, height }}>
+    <div style={{ position: 'relative', width: viewerDimensions.width, height: viewerDimensions.height }}>
       {isLoading &&
         <div>
           <div className="absolute z-20 top-1/2 left-1/2 w-10 h-10 border-4 border-solid border-gray-200 border-t-gray-700 rounded-full animate-spin transform -translate-x-1/2 -translate-y-1/2"></div>
