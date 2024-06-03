@@ -5,7 +5,8 @@ const Footer = () => {
     return (
         <footer className="footer footer-center p-10 bg-base-300 text-base-content">
             <aside>
-                <Image src={"/logo-alpine-tech.png"} width={200} height={200} alt="Logo AQTech"/>
+                <Image className="dark-image" src={"/logotexte-light.png"} width={200} height={200} alt="Logo AQTech"/>
+                <Image className="light-image" src={"/logotexte-dark.png"} width={200} height={200} alt="Logo AQTech"/>
                 <p className="italic">Summiting Innovation.</p>
                 <br />
                 <p>Copyright © 2024 - All rights reserved</p>

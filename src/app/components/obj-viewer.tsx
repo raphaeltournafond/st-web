@@ -146,7 +146,6 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
 
     const updateRenderer = () => {
       if (renderer && camera) {
-        camera.aspect = viewerDimensions.width / viewerDimensions.height;
         camera.updateProjectionMatrix();
         renderer.setSize(viewerDimensions.width, viewerDimensions.height);
         renderer.setClearColor(0x000000, 0);
