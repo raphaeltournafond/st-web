@@ -1,3 +1,4 @@
+import Link from "next/link";
 import UserTable from "../components/user-table";
 
 export default function Home() {
@@ -19,7 +20,7 @@ export default function Home() {
           </p>
           <p className="text-lg mb-8">
             For further inquiries or to request a full demo, reach out to us at:&nbsp;
-            <a href="mailto:contact.alpinetech@proton.me" className="text-blue-500 underline">contact.alpinetech@proton.me</a>
+            <Link href="mailto:contact.alpinetech@proton.me" className="text-info underline">contact.alpinetech@proton.me</Link>
           </p>
           <p className="text-lg mb-8">
             Thank you for your interest in our Smart Tracker app. We look forward to helping you discover how our innovative technology can enhance your experience.
