@@ -35,6 +35,10 @@ const config: Config = {
           ".dark-image": {
             display: "none",
           },
+          "info": "#2e90ed",
+          ".btn-info": {
+            "color": "white",
+          },
         },
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
@@ -43,6 +47,10 @@ const config: Config = {
           },
           ".light-image": {
             display: "none",
+          },
+          "info": "#2e90ed",
+          ".btn-info": {
+            "color": "white",
           },
         }
       },
