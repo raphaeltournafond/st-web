@@ -15,7 +15,7 @@ export default function Home() {
             <p className="text-lg md:text-xl brightness-75 mb-8">
               Choose AlpineTech for intelligent sports tracking.<br /><span className="border-base-content/20 border-b-2">Boost your performance</span> with state-of-the-art technology and tailored insights.
             </p>
-            <Link href="/table"><button className="btn btn-info">Get Started</button></Link>
+            <Link href="/table"><button className="btn btn-info">Watch Demo</button></Link>
           </div>
           <Image className='light-image hidden rounded-lg drop-shadow-xl' src={'/screen-light.png'} alt='screen' width={1000} height={1000} />
           <Image className='dark-image hidden rounded-lg drop-shadow-xl' src={'/screen-dark.png'} alt='screen' width={1000} height={1000} />
@@ -33,7 +33,7 @@ export default function Home() {
               We&apos;ve developed cutting-edge embedded devices for tracking sports activity,
               including step count, pace, strength, and more.
             </p>
-            <button className="btn btn-info">Learn More</button>
+            <Link href="/device"><button className="btn btn-info">Learn More</button></Link>
           </div>
         </div>
       </section>
@@ -46,7 +46,7 @@ export default function Home() {
               Take control of your training sessions with our intuitive mobile app,
               designed for athletes and personal coaches alike.
             </p>
-            <button className="btn btn-info">Explore App</button>
+            <Link href="/app"><button className="btn btn-info">Explore App</button></Link>
           </div>
           <div className="mockup-phone">
             <div className="camera"></div>
