@@ -11,9 +11,10 @@ interface OBJViewerProps {
   mtlUrl: string;
   width: number;
   height: number;
+  scale: number;
 }
 
-const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) => {
+const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, scale=1.4 }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const hasInitialized = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -49,7 +50,6 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
     let renderer: THREE.WebGLRenderer;
     let controls: OrbitControls;
     let object: THREE.Object3D | null = null;
-    let scaleFactor: number = 1.4
 
     const init = () => {
       camera = new THREE.PerspectiveCamera(45, originalAspectRatio, 0.1, 20);
@@ -86,7 +86,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
             objUrl,
             (loadedObject: THREE.Object3D) => {
               object = loadedObject;
-              object.scale.setScalar(scaleFactor / 100);
+              object.scale.setScalar(scale / 100);
               object.position.setZ(-0.05);
               object.rotateZ(90);
               scene.add(object);
@@ -136,7 +136,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
 
     init();
     animate();
-  }, [objUrl, mtlUrl, loadingPercentage, isLoading, viewerDimensions, originalAspectRatio]);
+  }, [objUrl, mtlUrl, loadingPercentage, isLoading, viewerDimensions, originalAspectRatio, scale]);
 
   useEffect(() => {
     if (!hasInitialized.current) return;

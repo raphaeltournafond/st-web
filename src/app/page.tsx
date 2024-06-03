@@ -25,7 +25,7 @@ export default function Home() {
       <section className="py-10">
         <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-center">
           <div className='order-2 lg:order-1 cursor-grab flex items-center justify-center'>
-            <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={600} height={600} />
+            <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={600} height={600} scale={1.4} />
           </div>
           <div className='order-1 lg:order-2 px-4'>
             <h1 className="text-2xl md:text-4xl font-bold mb-4">Our Embedded Devices</h1>
