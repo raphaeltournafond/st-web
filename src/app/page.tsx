@@ -5,7 +5,7 @@ import OBJViewer from './components/obj-viewer';
 import Link from 'next/link';
 import Image from 'next/image';
 
-export default function Home() {  
+export default function Home() {
   return (
     <main className="bg-base-100 text-base-content flex flex-col justify-center text-center lg:text-left py-10">
       <section className="py-10">
@@ -17,12 +17,8 @@ export default function Home() {
             </p>
             <Link href="/table"><button className="btn btn-info">Get Started</button></Link>
           </div>
-          <div className="light-image hidden">
-            <Image className='rounded-lg shadow-lg shadow-black' src={'/screen-light.png'} alt='screen' width={1000} height={1000} />
-          </div>
-          <div className="dark-image hidden">
-            <Image className='rounded-lg shadow-lg shadow-black' src={'/screen-dark.png'} alt='screen' width={1000} height={1000} />
-          </div>
+          <Image className='light-image hidden rounded-lg drop-shadow-xl' src={'/screen-light.png'} alt='screen' width={1000} height={1000} />
+          <Image className='dark-image hidden rounded-lg drop-shadow-xl' src={'/screen-dark.png'} alt='screen' width={1000} height={1000} />
         </div>
       </section>
 
@@ -56,7 +52,8 @@ export default function Home() {
             <div className="camera"></div>
             <div className="display">
               <div className="artboard artboard-demo phone-1 my-14">
-                <Image src={'/app.gif'} alt='App demo video' width={888} height={1836} unoptimized />
+                <Image className='light-image' src={'/app-light.gif'} alt='App demo video' width={888} height={1836} unoptimized />
+                <Image className='dark-image' src={'/app-dark.gif'} alt='App demo video' width={888} height={1836} unoptimized />
               </div>
             </div>
           </div>
