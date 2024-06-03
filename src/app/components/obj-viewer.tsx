@@ -95,7 +95,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height }) 
             },
             onProgress,
             () => {
-              setIsLoading(false);
+              setIsLoading(true);
             }
           );
         },

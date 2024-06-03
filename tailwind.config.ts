@@ -8,7 +8,7 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: (theme) => ({
+      backgroundImage: () => ({
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
@@ -24,26 +24,25 @@ const config: Config = {
       },
     },
   },
-  variants: {
-    extend: {
-      backgroundImage: ['dark'],
-    },
-  },
   daisyui: {
     themes: [
       {
         light: {
           ...require("daisyui/src/theming/themes")["light"],
-          ".screen-light": {
-            "background": "url('/screen-light.png')",
-            "background-size": "cover",
+          ".light-image": {
+            display: "block",
+          },
+          ".dark-image": {
+            display: "none",
           },
         },
         dark: {
           ...require("daisyui/src/theming/themes")["dark"],
-          ".screen-dark": {
-            "background": "url('/screen-dark.png')",
-            "background-size": "cover",
+          ".dark-image": {
+            display: "block",
+          },
+          ".light-image": {
+            display: "none",
           },
         }
       },

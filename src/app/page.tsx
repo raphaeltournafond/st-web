@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 export default function Home() {  
   return (
-    <main className="bg-base-100 text-base-content flex flex-col justify-center text-center lg:text-left">
+    <main className="bg-base-100 text-base-content flex flex-col justify-center text-center lg:text-left py-10">
       <section className="py-10">
         <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-center">
           <div className='px-4'>
@@ -17,21 +17,18 @@ export default function Home() {
             </p>
             <Link href="/table"><button className="btn btn-info">Get Started</button></Link>
           </div>
-          <div className="hidden xl:inline mockup-browser border bg-base-300">
-            <div className="mockup-browser-toolbar">
-              <div className="input">https://alpinetech.vercel.app</div>
-            </div>
-            <div className='py-40 screen-dark screen-light bg-cover'></div>
-          </div>
-          <div className="xl:hidden">
+          <div className="light-image hidden">
             <Image className='rounded-lg shadow-lg shadow-black' src={'/screen-light.png'} alt='screen' width={1000} height={1000} />
+          </div>
+          <div className="dark-image hidden">
+            <Image className='rounded-lg shadow-lg shadow-black' src={'/screen-dark.png'} alt='screen' width={1000} height={1000} />
           </div>
         </div>
       </section>
 
       <section className="py-10">
         <div className="container mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center justify-center">
-          <div className='order-2 lg:order-1 cursor-grab'>
+          <div className='order-2 lg:order-1 cursor-grab flex items-center justify-center'>
             <OBJViewer objUrl="/smart-tracker.obj" mtlUrl="/smart-tracker.mtl" width={600} height={600} />
           </div>
           <div className='order-1 lg:order-2 px-4'>
