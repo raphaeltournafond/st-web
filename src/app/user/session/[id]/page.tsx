@@ -81,7 +81,7 @@ export default function Page({ params }: { params: { id: string } }) {
 
         dataLines.push({
             data: peaks,
-            color: '#00B2FF',
+            color: '#2e90ed',
             label: 'Steps',
         });
     }
