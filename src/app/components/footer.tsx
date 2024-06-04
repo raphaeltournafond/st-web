@@ -6,8 +6,8 @@ const Footer = () => {
     return (
         <footer className="footer footer-center pt-10 bg-base-300 text-base-content">
             <aside>
-                <Link href={'https://www.alpinetech.fr/'}><Image className="dark-image" src={"/logotexte-light.png"} width={200} height={200} alt="Logo AQTech"/></Link>
-                <Link href={'https://www.alpinetech.fr/'}><Image className="light-image" src={"/logotexte-dark.png"} width={200} height={200} alt="Logo AQTech"/></Link>
+                <Link href={'https://www.alpinetech.fr/'}><Image className="dark-image" src={"/logotexte-light.png"} width={200} height={200} alt="Logo AlpineTech"/></Link>
+                <Link href={'https://www.alpinetech.fr/'}><Image className="light-image" src={"/logotexte-dark.png"} width={200} height={200} alt="Logo AlpineTech"/></Link>
                 <p className="italic">Summiting Innovation.</p>
                 <br />
                 <p>Copyright © 2024 - All rights reserved</p>

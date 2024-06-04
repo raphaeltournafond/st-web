@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Smart Tracker",
-  description: "Developed by AQTech",
+  description: "Developed by AlpineTech",
 };
 
 export default function RootLayout({
