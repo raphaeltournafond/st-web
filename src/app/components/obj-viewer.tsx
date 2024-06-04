@@ -12,9 +12,11 @@ interface OBJViewerProps {
   width: number;
   height: number;
   scale: number;
+  enableControls: boolean;
+  autorotate: boolean;
 }
 
-const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, scale=1.4 }) => {
+const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, scale, enableControls, autorotate }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const hasInitialized = useRef(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -117,11 +119,12 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
       }
 
       controls = new OrbitControls(camera, renderer.domElement);
-      controls.enableDamping = true;
+      controls.enabled = enableControls;
+      controls.enableDamping = autorotate;
       controls.enablePan = false;
       controls.enableZoom = false;
       controls.dampingFactor = 1;
-      controls.autoRotate = true;
+      controls.autoRotate = autorotate;
       controls.autoRotateSpeed = 2.0;
 
     };
@@ -136,7 +139,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
 
     init();
     animate();
-  }, [objUrl, mtlUrl, loadingPercentage, isLoading, viewerDimensions, originalAspectRatio, scale]);
+  }, [objUrl, mtlUrl, loadingPercentage, isLoading, viewerDimensions, originalAspectRatio, scale, autorotate, enableControls]);
 
   useEffect(() => {
     if (!hasInitialized.current) return;
@@ -186,7 +189,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: viewerDimensions.width, height: viewerDimensions.height }} className={isGrabbing ? 'cursor-grabbing' : 'cursor-grab'}>
+    <div style={{ position: 'relative', width: viewerDimensions.width, height: viewerDimensions.height }} className={enableControls ? (isGrabbing ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-default'}>
       {isLoading &&
         <div>
           <div className="absolute z-20 top-1/2 left-1/2 w-10 h-10 border-4 border-solid border-gray-200 border-t-gray-700 rounded-full animate-spin transform -translate-x-1/2 -translate-y-1/2"></div>
