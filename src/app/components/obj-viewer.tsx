@@ -53,7 +53,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
 
     const init = () => {
       camera = new THREE.PerspectiveCamera(45, originalAspectRatio, 0.1, 20);
-      camera.position.set(0, 2, 1);
+      camera.position.set(0, 0.5, 0.2);
       camera.up.set(0, 0, 1);
       camera.lookAt(0, 0, 0);
 
@@ -118,11 +118,11 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
 
       controls = new OrbitControls(camera, renderer.domElement);
       controls.enableDamping = true;
-      controls.dampingFactor = 0.3;
-      controls.autoRotate = false;
+      controls.enablePan = false;
+      controls.enableZoom = false;
+      controls.dampingFactor = 1;
+      controls.autoRotate = true;
       controls.autoRotateSpeed = 2.0;
-      controls.minDistance = 0.5;
-      controls.maxDistance = 0.5;
 
     };
 
@@ -130,7 +130,6 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
       requestAnimationFrame(animate);
       if (renderer && scene && camera && object) {
         renderer.render(scene, camera);
-        object.rotation.z += 0.008;
       }
       controls.update();
     };
