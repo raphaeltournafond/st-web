@@ -69,7 +69,8 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
       const onProgress = (xhr: ProgressEvent<EventTarget>) => {
         if (xhr.lengthComputable) {
           const percentComplete = (xhr.loaded / xhr.total) * 100;
-          console.log(percentComplete.toFixed(2) + '% downloaded');
+          console.log(mtlUrl, ' ', percentComplete.toFixed(2) + '% downloaded');
+          setIsLoading(true);
           setLoadingPercentage(percentComplete);
         }
       };
@@ -95,7 +96,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
             },
             onProgress,
             () => {
-              setIsLoading(true);
+              setIsLoading(false)
             }
           );
         },
