@@ -189,7 +189,7 @@ const OBJViewer: React.FC<OBJViewerProps> = ({ objUrl, mtlUrl, width, height, sc
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: viewerDimensions.width, height: viewerDimensions.height }} className={enableControls ? (isGrabbing ? 'cursor-grabbing' : 'cursor-grab') : 'cursor-default'}>
+    <div style={{ position: 'relative', width: viewerDimensions.width, height: viewerDimensions.height }} className={(enableControls ? (isLoading ? 'cursor-wait' : (isGrabbing ? 'cursor-grabbing' : 'cursor-grab')) : 'cursor-default')}>
       {isLoading &&
         <div>
           <div className="absolute z-20 top-1/2 left-1/2 w-10 h-10 border-4 border-solid border-gray-200 border-t-gray-700 rounded-full animate-spin transform -translate-x-1/2 -translate-y-1/2"></div>
