@@ -8,12 +8,53 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
+      backgroundImage: () => ({
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      }),
+      animation: {
+        spin: 'spin 1s linear infinite',
+      },
+      keyframes: {
+        spin: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
       },
     },
+  },
+  daisyui: {
+    themes: [
+      {
+        light: {
+          ...require("daisyui/src/theming/themes")["light"],
+          ".light-image": {
+            display: "block",
+          },
+          ".dark-image": {
+            display: "none",
+          },
+          "info": "#2e90ed",
+          ".btn-info": {
+            "color": "white",
+          },
+        },
+        dark: {
+          ...require("daisyui/src/theming/themes")["dark"],
+          ".dark-image": {
+            display: "block",
+          },
+          ".light-image": {
+            display: "none",
+          },
+          "info": "#2e90ed",
+          ".btn-info": {
+            "color": "white",
+          },
+        }
+      },
+    ],
   },
   plugins: [require("daisyui")],
 };
