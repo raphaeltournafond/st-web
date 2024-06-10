@@ -1,90 +1,73 @@
-import React from 'react';
-import { fetchSession, fetchSessionList, fetchUserList } from '@/app/lib/api';
+'use client'
+
+import React, { useEffect, useState, useRef } from 'react';
+import { checkBackend, fetchSession } from '@/app/lib/api';
 import { Session, exportSessionData } from '@/app/types/session';
-import { formatDate, jsonToSession, jsonToUser } from '@/app/lib/utils';
+import { formatDate, jsonToSession } from '@/app/lib/utils';
 import DataViewer, { DataLine } from '@/app/components/data-viewer';
 import { extractStepsStats, extractPeaks, normalizeData } from '@/app/lib/processor';
-import { User } from '@/app/types/user';
-
-interface Props {
-    session: Session | undefined;
-    error: string | undefined;
-}
-
-export const dynamicParams = false;
-
-export async function generateStaticParams() {
-    const users: User[] = fetchUserList().map(jsonToUser)
-    const sessions: Session[] = users.map((user) => fetchSessionList(user.id.toString()).map(jsonToSession))[0]
-    return sessions.map((session) => ({
-        id: session.id,
-    }))
-}
-
-function getProps(id: string): Props {
-    try {
-        const jsonData = fetchSession(id);
-        const session: Session = jsonToSession(jsonData);
-        return {
-            session: session,
-            error: undefined,
-        };
-    } catch (error: any) {
-        console.error(error.message);
-        return {
-            session: undefined,
-            error: `Error fetching data: ${error.message}`,
-        };
-    }
-}
 
 export default function Page({ params }: { params: { id: string } }) {
-    let stepCountValue = 0;
-    let stepFrequencyValue = 0;
-    let stepRegularityValue = 0;
-    let stepVariationValue = 0;
+    const [session, setSession] = useState<Session>();
+    const [stepCountValue, setStepCount] = useState<number>(0);
+    const [stepFrequencyValue, setStepFrequency] = useState<number>(0);
+    const [stepRegularityValue, setStepRegularity] = useState<number>(0);
+    const [stepVariationValue, setStepVariation] = useState<number>(0);
 
-    let length = 1000;
+    const length = useRef<number>(1000);
 
-    let dataLines: DataLine[] = [];
-    const { id } = params;
-    const props = getProps(id);
+    let dataLines = useRef<DataLine[]>([]);
 
-    if (props.session) {
-        const [xValues, yValues, zValues] = exportSessionData(normalizeData(props.session.data));
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                await checkBackend();
+                const sessionJsonData = await fetchSession(params.id)
+                setSession(jsonToSession(sessionJsonData))
+            } catch (error: any) {
+                console.error('[Session] Error fetching data:', error.message);
+            }
+        };
+        fetchData();
+    }, [params.id]);
 
-        dataLines.push({
-            data: xValues,
-            color: 'gray',
-            label: 'X'
-        });
+    useEffect(() => {
+        if (session) {
+            const [xValues, yValues, zValues] = exportSessionData(normalizeData(session.data));
 
-        dataLines.push({
-            data: yValues,
-            color: 'gray',
-            label: 'Y'
-        });
+            dataLines.current.push({
+                data: xValues,
+                color: 'gray',
+                label: 'X'
+            });
 
-        dataLines.push({
-            data: zValues,
-            color: 'gray',
-            label: 'Z'
-        });
+            dataLines.current.push({
+                data: yValues,
+                color: 'gray',
+                label: 'Y'
+            });
 
-        const peaks = extractPeaks(props.session.data)
-        length = peaks.length * 10;
-        const { stepCount, stepFrequency, stepRegularity, averageMagnitudeVariation } = extractStepsStats(peaks);
-        stepCountValue = stepCount;
-        stepFrequencyValue = stepFrequency;
-        stepRegularityValue = stepRegularity;
-        stepVariationValue = averageMagnitudeVariation;
+            dataLines.current.push({
+                data: zValues,
+                color: 'gray',
+                label: 'Z'
+            });
 
-        dataLines.push({
-            data: peaks,
-            color: '#2e90ed',
-            label: 'Steps',
-        });
-    }
+            const peaks = extractPeaks(session.data)
+            length.current = peaks.length * 10;
+            const { stepCount, stepFrequency, stepRegularity, averageMagnitudeVariation } = extractStepsStats(peaks);
+            setStepCount(stepCount);
+            setStepFrequency(stepFrequency);
+            setStepRegularity(stepRegularity);
+            setStepVariation(averageMagnitudeVariation);
+
+            dataLines.current.push({
+                data: peaks,
+                color: 'cornflowerblue',
+                label: 'Steps',
+            });
+        }
+    }, [session, dataLines]);
 
     return (
         <main className='bg-base-200 min-h-screen flex justify-center text-base-content'>
@@ -159,9 +142,9 @@ export default function Page({ params }: { params: { id: string } }) {
                     </div>
                 </div>
                 <div className="bg-base-100 rounded-lg shadow-lg m-6 overflow-x-auto">
-                    <DataViewer data={dataLines} width={length} height={600} />
+                    <DataViewer data={dataLines.current} width={length.current} height={600} />
                 </div>
-                <p>{formatDate(Number(props.session?.startDate))}</p>
+                <p>{formatDate(Number(session?.startDate))}</p>
             </div>
         </main>
 

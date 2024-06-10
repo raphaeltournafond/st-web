@@ -1,58 +1,76 @@
-import fs from 'fs';
-import path from 'path';
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const TEST_URL = process.env.NEXT_PUBLIC_TEST_URL;
+const USER_URL = process.env.NEXT_PUBLIC_USER_URL;
+const SESSION_URL = process.env.NEXT_PUBLIC_SESSION_URL;
+const SESSION_LIST_URL = process.env.NEXT_PUBLIC_SESSION_LIST_URL;
 
-const usersPath = path.join(process.cwd(), 'public/demo-data', 'users.json');
-const sessionsPath = path.join(process.cwd(), 'public/demo-data', 'sessions.json');
-
-function fetchUserList(): [] {
+async function fetchAPI(url: string|undefined, method: string = 'POST', headers: any = { 'Content-Type': 'application/json' }, body: any = {}) {
     try {
-        const data = fs.readFileSync(usersPath, 'utf8');
-        return JSON.parse(data);
-    } catch (error: any) {
-        console.error(error.message);
-        throw new Error(`Failed to fetch user list: ${error.message}.`);
-    }
-}
-
-function fetchUserDetails(id: string) {
-    try {
-        const data = fs.readFileSync(usersPath, 'utf8');
-        const users = JSON.parse(data);
-        const user = users.find((user: any) => user.id === id);
-        if (!user) {
-            throw new Error(`User with ID ${id} not found.`);
+        if (url) {
+            const response = await fetch(url, {
+                method: method,
+                headers: headers,
+                body: body
+            })
+            if (!response.ok) {
+                console.error(response.status, response.url, response.statusText)
+                throw new Error(`${response.status}: ${response.url}, ${response.statusText}.`)
+            } else {
+                const data = await response.json()
+                return data
+            }
+        } else {
+            throw new Error('API URL is not set')
         }
-        return user;
     } catch (error: any) {
-        console.error(error.message);
-        throw new Error(`Failed to fetch user details: ${error.message}.`);
+        console.log(error.message)
+        throw new Error(`${error.message}.`)
     }
 }
 
-function fetchSessionList(userId: string) {
+async function checkBackend() {
     try {
-        const data = fs.readFileSync(sessionsPath, 'utf8');
-        const sessions = JSON.parse(data);
-        return sessions.filter((session: any) => session.user === userId);
+        return await fetchAPI(`${BASE_URL}${TEST_URL}`, 'GET', undefined, null)
     } catch (error: any) {
-        console.error(error.message);
-        throw new Error(`Failed to fetch session list: ${error.message}.`);
+        console.error(error.message)
+        throw new Error(`checkBackend ${error.message}.`)
     }
 }
 
-function fetchSession(id: string) {
+async function fetchUserList() {
     try {
-        const data = fs.readFileSync(sessionsPath, 'utf8');
-        const sessions = JSON.parse(data);
-        const session = sessions.find((session: any) => session.id === id);
-        if (!session) {
-            throw new Error(`Session with ID ${id} not found.`);
-        }
-        return session;
+        return await fetchAPI(`${BASE_URL}${USER_URL}`, 'GET', undefined, null)
     } catch (error: any) {
-        console.error(error.message);
-        throw new Error(`Failed to fetch session: ${error.message}.`);
+        console.error(error.message)
+        throw new Error(`${error.message}.`)
     }
 }
 
-export { fetchUserList, fetchUserDetails, fetchSessionList, fetchSession };
+async function fetchUserDetails(id: string) {
+    try {
+        return await fetchAPI(`${BASE_URL}${USER_URL}${id}/`, 'GET', undefined, null)
+    } catch (error: any) {
+        console.error(error.message)
+        throw new Error(`${error.message}.`)
+    }
+}
+
+async function fetchSessionList(id: string) {
+    try {
+        return await fetchAPI(`${BASE_URL}${SESSION_LIST_URL}${id}/`, 'GET', undefined, null)
+    } catch (error: any) {
+        console.error(error.message)
+        throw new Error(`${error.message}.`)
+    }
+}
+
+async function fetchSession(id: string) {
+    try {
+        return await fetchAPI(`${BASE_URL}${SESSION_URL}${id}/`, 'GET', undefined, null)
+    } catch (error: any) {
+        console.error(error.message)
+        throw new Error(`${error.message}.`)
+    }
+}
+
+export {checkBackend, fetchUserList, fetchUserDetails, fetchSessionList, fetchSession}
